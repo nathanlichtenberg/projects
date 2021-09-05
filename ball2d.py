@@ -1,21 +1,40 @@
 import pygame
 import random
+from pygame.math import Vector2
 
 W = 1000
 H = 800
 
-radius = 50
+class Ball:
 
-x = 10
-y = 10
+    def __init__(self,position,direction,radius,color):
+        self.pos = position
+        self.direction = direction
+        self.radius = radius
+        self.color = color
 
-x_vel = random.randint(5,15)
-y_vel = random.randint(6,16)
+    def move(self):
+        if self.pos[1] <= 0 or self.pos[1] >= H - 2 * self.radius:
+            self.direction[1] = -1 * self.direction[1]
+
+        if self.pos[0] <= 0 or self.pos[0] >= W - 2 * self.radius:
+            self.direction[0] = -1 * self.direction[0]
+
+
+        self.pos = self.pos + self.direction
+
+        pygame.draw.ellipse(screen, self.color, (self.pos[0], self.pos[1], 2 * self.radius, 2 * self.radius))
+
+    
+
 
 pygame.init()
 screen = pygame.display.set_mode((W,H))
-pygame.display.set_caption("moving_shapes")
+pygame.display.set_caption("ball")
 clock = pygame.time.Clock()
+
+ball1 = Ball(Vector2(10,10),Vector2(20,20),30,(132,255,123))
+ball2 = Ball(Vector2(390,390),Vector2(13,13),50,(71,28,182))
 
 
 while True:
@@ -23,17 +42,10 @@ while True:
         if event.type == pygame.QUIT:
             pygame.quit()
 
-    if y <= 0 or y >= H - 2 * radius:
-        y_vel = -1 * y_vel
-
-    if x <= 0 or x >= W - 2 * radius:
-        x_vel = -1 * x_vel
-
-
-    x += x_vel
-    y += y_vel
     screen.fill((255,255,255))
-    pygame.draw.ellipse(screen, (0,0,0), (x, y, 2 * radius, 2 * radius))
+    ball1.move()
+    ball2.move()
+   
     pygame.display.update()
     clock.tick(60)
     
