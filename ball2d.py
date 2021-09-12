@@ -31,6 +31,7 @@ def spawn_ball(mouse_pos,speed):
     center = Vector2(W/2,H/2)
     mouse_pos = Vector2(mouse_pos)
     direction = mouse_pos-center
+
     direction.scale_to_length(speed)
     return Ball(center,direction,40,(0,0,0))
 
@@ -44,6 +45,7 @@ clock = pygame.time.Clock()
 #ball2 = Ball(Vector2(390,390),Vector2(10,10),50,(71,28,182))
 
 balls = []
+
 
 while True:
     for event in pygame.event.get():
