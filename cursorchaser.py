@@ -7,8 +7,9 @@ H = 800
 
 class Ball:
 
-    def __init__(self,position,radius,color):
+    def __init__(self,position,velocity,radius,color):
         self.pos = position
+        self.vel = velocity
         self.radius = radius
         self.color = color
         self.show = True
@@ -16,8 +17,7 @@ class Ball:
     def move(self):
         self.pos = pygame.mouse.get_pos()
         
-        pygame.draw.ellipse(screen, self.color, (self.pos[0]-self.radius, self.pos[1]-self.radius
-                                                 , 2 * self.radius, 2 * self.radius))
+        pygame.draw.ellipse(screen, self.color, (self.pos[0]-self.radius, self.pos[1]-self.radius, 2 * self.radius, 2 * self.radius))
 
 
     
@@ -26,7 +26,7 @@ screen = pygame.display.set_mode((W,H))
 pygame.display.set_caption("cursorchaser")
 clock = pygame.time.Clock()
 
-ball = Ball(Vector2(10,10),30,(0,0,0))
+ball = Ball(Vector2(10,10),Vector2(0,0),30,(0,0,0))
 
 while True:
     for event in pygame.event.get():

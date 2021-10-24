@@ -22,6 +22,7 @@ while True:
     if y <= 0:
         up = False
     if y >= H - 2 * radius:
+
         up = True
 
     if up:
