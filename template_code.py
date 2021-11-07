@@ -1,7 +1,7 @@
 import pygame
 pygame.init()
 screen = pygame.display.set_mode((600,600))
-pygame.display.set_caption("moving_shapes")
+pygame.display.set_caption("")
 clock = pygame.time.Clock()
 
 while True:
