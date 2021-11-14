@@ -32,12 +32,22 @@ class Ball:
         mouse_pos = Vector2(mouse_pos)
         direction = mouse_pos-center
 
+
+
+
         direction.scale_to_length(speed)
-        return Ball(center,direction,40,(0,0,0))
+        return Ball(center,direction,30,(0,0,0))
 
 class Paddle:
-    pass
+    def __init__(self,pos,width,height):
+        self.rect = pygame.Rect(0,0,width,height)
+        self.rect.center = pos
 
+
+
+        
+    def draw(self,surface):
+        pygame.draw.rect(surface,(255,255,255),self.rect)
 
 
 class Game:
@@ -46,6 +56,8 @@ class Game:
         pygame.display.set_caption("Pong")
         self.screen = pygame.display.set_mode((W,H))
         self.clock = pygame.time.Clock()
+        self.left_paddle = Paddle((35,H//2),20,130)
+        self.right_paddle = Paddle((W-35,H//2),20,130)
 
     def run(self):
         while True:
@@ -55,6 +67,8 @@ class Game:
                 
             self.screen.fill((0,0,0))
             pygame.draw.rect(self.screen,(255,255,255),(500,500,25,25))
+            self.left_paddle.draw(self.screen)
+            self.right_paddle.draw(self.screen)
             pygame.display.update()
             self.clock.tick(60)
 
