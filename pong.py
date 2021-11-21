@@ -33,8 +33,6 @@ class Ball:
         direction = mouse_pos-center
 
 
-
-
         direction.scale_to_length(speed)
         return Ball(center,direction,30,(0,0,0))
 
@@ -43,12 +41,16 @@ class Paddle:
         self.rect = pygame.Rect(0,0,width,height)
         self.rect.center = pos
 
-
-
         
     def draw(self,surface):
         pygame.draw.rect(surface,(255,255,255),self.rect)
 
+    def move(self,amount):
+        self.rect.move_ip(0, amount)
+        if self.rect.top < 10:
+            self.rect.top = 10
+        if self.rect.bottom > H - 10:
+            self.rect.bottom = H - 10
 
 class Game:
     def __init__(self):
@@ -59,6 +61,24 @@ class Game:
         self.left_paddle = Paddle((35,H//2),20,130)
         self.right_paddle = Paddle((W-35,H//2),20,130)
 
+    def draw_net(self):
+        pygame.draw.rect(self.screen,(255,255,255),(W//2,25,25,25))
+        pygame.draw.rect(self.screen,(255,255,255),(W//2,75,25,25))
+        pygame.draw.rect(self.screen,(255,255,255),(W//2,125,25,25))
+        pygame.draw.rect(self.screen,(255,255,255),(W//2,175,25,25))
+        pygame.draw.rect(self.screen,(255,255,255),(W//2,225,25,25))
+        pygame.draw.rect(self.screen,(255,255,255),(W//2,275,25,25))
+        pygame.draw.rect(self.screen,(255,255,255),(W//2,325,25,25))
+        pygame.draw.rect(self.screen,(255,255,255),(W//2,375,25,25))
+        pygame.draw.rect(self.screen,(255,255,255),(W//2,425,25,25))
+        pygame.draw.rect(self.screen,(255,255,255),(W//2,475,25,25))
+        pygame.draw.rect(self.screen,(255,255,255),(W//2,525,25,25))
+        pygame.draw.rect(self.screen,(255,255,255),(W//2,575,25,25))
+        pygame.draw.rect(self.screen,(255,255,255),(W//2,625,25,25))
+        pygame.draw.rect(self.screen,(255,255,255),(W//2,675,25,25))
+        pygame.draw.rect(self.screen,(255,255,255),(W//2,725,25,25))
+        pygame.draw.rect(self.screen,(255,255,255),(W//2,775,25,25))
+
     def run(self):
         while True:
             for event in pygame.event.get():
@@ -66,7 +86,22 @@ class Game:
                     pygame.quit()
                 
             self.screen.fill((0,0,0))
-            pygame.draw.rect(self.screen,(255,255,255),(500,500,25,25))
+            self.draw_net()
+            pygame.draw.rect(self.screen,(255,255,255),(800,500,25,25))
+
+
+
+            keys = pygame.key.get_pressed()
+            
+            if keys[pygame.K_UP]:
+                self.right_paddle.move(-10)
+            elif keys[pygame.K_DOWN]:
+                self.right_paddle.move(10)
+            if keys[pygame.K_w]:
+                self.left_paddle.move(-10)
+            elif keys[pygame.K_s]:
+                self.left_paddle.move(10)
+                
             self.left_paddle.draw(self.screen)
             self.right_paddle.draw(self.screen)
             pygame.display.update()
