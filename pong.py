@@ -1,5 +1,6 @@
 import pygame
 import random
+import math
 from pygame.math import Vector2
 
 W = 1000
@@ -7,12 +8,12 @@ H = 800
 
 class Ball:
 
-    def __init__(self,position,direction,radius,color):
+    def __init__(self,position,radius,color):
         self.pos = position
-        self.direction = direction
         self.radius = radius
         self.color = color
         self.show = True
+        self.spawn_ball()
 
     def move(self):
         if self.pos[1] <= 0 or self.pos[1] >= H - 2 * self.radius:
@@ -27,12 +28,12 @@ class Ball:
 
 
 
-    def spawn_ball(self,mouse_pos,speed):
+    def spawn_ball(self):
         center = Vector2(W/2,H/2)
-        mouse_pos = Vector2(mouse_pos)
-        direction = mouse_pos-center
-
-
+        angle = math.radians(random.randint(0,360))
+        speed = random.randint(4,10)
+        self.direction = Vector2(math.cos(angle),math.sin(angle))
+        
         direction.scale_to_length(speed)
         return Ball(center,direction,30,(0,0,0))
 
@@ -90,7 +91,6 @@ class Game:
             pygame.draw.rect(self.screen,(255,255,255),(800,500,25,25))
 
 
-
             keys = pygame.key.get_pressed()
             
             if keys[pygame.K_UP]:
@@ -101,9 +101,10 @@ class Game:
                 self.left_paddle.move(-10)
             elif keys[pygame.K_s]:
                 self.left_paddle.move(10)
+
                 
-            self.left_paddle.draw(self.screen)
-            self.right_paddle.draw(self.screen)
+            #self.left_paddle.draw(self.screen)
+            #self.right_paddle.draw(self.screen)
             pygame.display.update()
             self.clock.tick(60)
 
