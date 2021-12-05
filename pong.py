@@ -8,23 +8,23 @@ H = 800
 
 class Ball:
 
-    def __init__(self,position,radius,color):
+    def __init__(self,position,width,color):
         self.pos = position
-        self.radius = radius
+        self.width = width
         self.color = color
         self.show = True
         self.spawn_ball()
 
-    def move(self):
-        if self.pos[1] <= 0 or self.pos[1] >= H - 2 * self.radius:
+    def move(self,screen):
+        if self.pos[1] <= 0 or self.pos[1] >= H - 2 * self.width:
             self.direction[1] = -1 * self.direction[1]
 
-        #if self.pos[0] <= 0 or self.pos[0] >= W - 2 * self.radius:
-            #self.show = False
+        if self.pos[0] <= 0 or self.pos[0] >= W - 2 * self.width:
+            self.show = False
 
         self.pos = self.pos + self.direction
         
-        pygame.draw.ellipse(screen, self.color, (self.pos[0], self.pos[1], 2 * self.radius, 2 * self.radius))
+        pygame.draw.rect(screen, self.color, (self.pos[0], self.pos[1], self.width, self.width))
 
 
 
@@ -34,8 +34,7 @@ class Ball:
         speed = random.randint(4,10)
         self.direction = Vector2(math.cos(angle),math.sin(angle))
         
-        direction.scale_to_length(speed)
-        return Ball(center,direction,30,(0,0,0))
+        self.direction.scale_to_length(speed)
 
 class Paddle:
     def __init__(self,pos,width,height):
@@ -61,6 +60,7 @@ class Game:
         self.clock = pygame.time.Clock()
         self.left_paddle = Paddle((35,H//2),20,130)
         self.right_paddle = Paddle((W-35,H//2),20,130)
+        self.ball = Ball((W//2, H//2),25,(255,255,255))
 
     def draw_net(self):
         pygame.draw.rect(self.screen,(255,255,255),(W//2,25,25,25))
@@ -88,7 +88,6 @@ class Game:
                 
             self.screen.fill((0,0,0))
             self.draw_net()
-            pygame.draw.rect(self.screen,(255,255,255),(800,500,25,25))
 
 
             keys = pygame.key.get_pressed()
@@ -103,8 +102,9 @@ class Game:
                 self.left_paddle.move(10)
 
                 
-            #self.left_paddle.draw(self.screen)
-            #self.right_paddle.draw(self.screen)
+            self.left_paddle.draw(self.screen)
+            self.right_paddle.draw(self.screen)
+            self.ball.move(self.screen)
             pygame.display.update()
             self.clock.tick(60)
 
