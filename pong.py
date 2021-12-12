@@ -9,30 +9,24 @@ H = 800
 class Ball:
 
     def __init__(self,position,width,color):
-        self.pos = position
-        self.width = width
         self.color = color
-        self.show = True
+        self.rect = pygame.Rect(position[0], position[1], width, width)
         self.spawn_ball()
-
     def move(self,screen):
-        if self.pos[1] <= 0 or self.pos[1] >= H - 2 * self.width:
+        if self.rect.y <= 0 or self.rect.y >= H - 2 * self.rect.width:
             self.direction[1] = -1 * self.direction[1]
 
-        if self.pos[0] <= 0 or self.pos[0] >= W - 2 * self.width:
-            self.show = False
-
-        self.pos = self.pos + self.direction
+        self.rect.move_ip(self.direction[0], self.direction[1])
         
-        pygame.draw.rect(screen, self.color, (self.pos[0], self.pos[1], self.width, self.width))
+        pygame.draw.rect(screen, self.color, self.rect)
 
 
 
     def spawn_ball(self):
         center = Vector2(W/2,H/2)
-        angle = math.radians(random.randint(0,360))
-        speed = random.randint(4,10)
-        self.direction = Vector2(math.cos(angle),math.sin(angle))
+        angle = math.radians(random.choice([0,90,180,270]) + random.randint(20,60))
+        speed = random.randint(8,12)
+        self.direction = Vector2(math.cos(angle),-1*math.sin(angle))
         
         self.direction.scale_to_length(speed)
 
@@ -101,6 +95,13 @@ class Game:
             elif keys[pygame.K_s]:
                 self.left_paddle.move(10)
 
+
+
+            if self.ball.rect.colliderect(self.left_paddle):
+                self.ball.direction[0] *= -1
+
+            if self.ball.rect.colliderect(self.right_paddle):
+                self.ball.direction[0] *= -1
                 
             self.left_paddle.draw(self.screen)
             self.right_paddle.draw(self.screen)
