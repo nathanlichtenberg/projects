@@ -1,6 +1,7 @@
 import pygame
 import random
 import math
+import time
 from pygame.math import Vector2
 
 W = 1000
@@ -57,23 +58,30 @@ class Game:
         self.ball = Ball((W//2, H//2),25,(255,255,255))
 
     def draw_net(self):
-        pygame.draw.rect(self.screen,(255,255,255),(W//2,25,25,25))
-        pygame.draw.rect(self.screen,(255,255,255),(W//2,75,25,25))
-        pygame.draw.rect(self.screen,(255,255,255),(W//2,125,25,25))
-        pygame.draw.rect(self.screen,(255,255,255),(W//2,175,25,25))
-        pygame.draw.rect(self.screen,(255,255,255),(W//2,225,25,25))
-        pygame.draw.rect(self.screen,(255,255,255),(W//2,275,25,25))
-        pygame.draw.rect(self.screen,(255,255,255),(W//2,325,25,25))
-        pygame.draw.rect(self.screen,(255,255,255),(W//2,375,25,25))
-        pygame.draw.rect(self.screen,(255,255,255),(W//2,425,25,25))
-        pygame.draw.rect(self.screen,(255,255,255),(W//2,475,25,25))
-        pygame.draw.rect(self.screen,(255,255,255),(W//2,525,25,25))
-        pygame.draw.rect(self.screen,(255,255,255),(W//2,575,25,25))
-        pygame.draw.rect(self.screen,(255,255,255),(W//2,625,25,25))
-        pygame.draw.rect(self.screen,(255,255,255),(W//2,675,25,25))
-        pygame.draw.rect(self.screen,(255,255,255),(W//2,725,25,25))
-        pygame.draw.rect(self.screen,(255,255,255),(W//2,775,25,25))
+        pygame.draw.rect(self.screen,(255,255,255),(W//2-12.5,25,25,25))
+        pygame.draw.rect(self.screen,(255,255,255),(W//2-12.5,75,25,25))
+        pygame.draw.rect(self.screen,(255,255,255),(W//2-12.5,125,25,25))
+        pygame.draw.rect(self.screen,(255,255,255),(W//2-12.5,175,25,25))
+        pygame.draw.rect(self.screen,(255,255,255),(W//2-12.5,225,25,25))
+        pygame.draw.rect(self.screen,(255,255,255),(W//2-12.5,275,25,25))
+        pygame.draw.rect(self.screen,(255,255,255),(W//2-12.5,325,25,25))
+        pygame.draw.rect(self.screen,(255,255,255),(W//2-12.5,375,25,25))
+        pygame.draw.rect(self.screen,(255,255,255),(W//2-12.5,425,25,25))
+        pygame.draw.rect(self.screen,(255,255,255),(W//2-12.5,475,25,25))
+        pygame.draw.rect(self.screen,(255,255,255),(W//2-12.5,525,25,25))
+        pygame.draw.rect(self.screen,(255,255,255),(W//2-12.5,575,25,25))
+        pygame.draw.rect(self.screen,(255,255,255),(W//2-12.5,625,25,25))
+        pygame.draw.rect(self.screen,(255,255,255),(W//2-12.5,675,25,25))
+        pygame.draw.rect(self.screen,(255,255,255),(W//2-12.5,725,25,25))
+        pygame.draw.rect(self.screen,(255,255,255),(W//2-12.5,775,25,25))
 
+
+    def draw_menu(self):
+        pygame.draw.rect(self.screen,(64,0,128),(W//2-250,H-300,500,100), border_radius = 20)
+        font = pygame.font.SysFont("Arial", 60, True, False)
+        text = font.render('Start Game', True, (77,255,255))
+        self.screen.blit(text,(200,200,200,200))
+        
     def run(self):
         while True:
             for event in pygame.event.get():
@@ -82,7 +90,8 @@ class Game:
                 
             self.screen.fill((0,0,0))
             self.draw_net()
-
+            self.draw_menu()
+            
 
             keys = pygame.key.get_pressed()
             
@@ -98,10 +107,12 @@ class Game:
 
 
             if self.ball.rect.colliderect(self.left_paddle):
-                self.ball.direction[0] *= -1
+                if self.ball.direction[0] < 0:
+                    self.ball.direction[0] *= -1
 
             if self.ball.rect.colliderect(self.right_paddle):
-                self.ball.direction[0] *= -1
+                if self.ball.direction[0] > 0:
+                    self.ball.direction[0] *= -1
                 
             self.left_paddle.draw(self.screen)
             self.right_paddle.draw(self.screen)
