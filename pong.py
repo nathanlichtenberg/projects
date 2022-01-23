@@ -60,7 +60,9 @@ class Game:
         self.left_paddle = Paddle((35,H//2),20,130)
         self.right_paddle = Paddle((W-35,H//2),20,130)
         self.ball = Ball(25,(255,255,255))
-        self.start = False
+        self.play_round = False
+        self.start = True
+        self.start_round = pygame.USEREVENT
 
     def draw_net(self):
         pygame.draw.rect(self.screen,(255,255,255),(W//2,25,25,25))
@@ -87,16 +89,22 @@ class Game:
                 if event.type == pygame.QUIT:
                     pygame.quit()
                 elif event.type == pygame.MOUSEBUTTONDOWN:
-                    if event.button == 1 and self.start == False:
+                    if event.button == 1 and self.start:
                         time.sleep(0.5)
-                        self.start = True
+                        self.play_round = True
                         self.ball.spawn_ball()
+                        self.start = False
+
+                elif event.type == self.start_round:
+                    self.play_round = True
+                    self.ball.spawn_ball()
 
                 
             self.screen.fill((0,0,0))
             self.draw_net()
-
-            if self.start:
+                
+                
+            if self.play_round:
                 keys = pygame.key.get_pressed()
                 
                 if keys[pygame.K_UP]:
@@ -116,6 +124,15 @@ class Game:
                 if self.ball.rect.colliderect(self.right_paddle):
                     if self.ball.direction[0] > 0:
                         self.ball.direction[0] *= -1
+
+                if self.ball.rect.x < self.ball.width * -1:
+                    self.play_round = False
+                    pygame.time.set_timer(self.start_round,3000)
+
+                if self.ball.rect.x > W:
+                    self.play_round = False
+                    pygame.time.set_timer(self.start_round,3000)
+                
                 
             self.left_paddle.draw(self.screen)
             self.right_paddle.draw(self.screen)
