@@ -44,6 +44,7 @@ class Paddle:
     def draw(self,surface):
         pygame.draw.rect(surface,(255,255,255),self.rect)
 
+        
     def move(self,amount):
         self.rect.move_ip(0, amount)
         if self.rect.top < 10:
@@ -51,12 +52,25 @@ class Paddle:
         if self.rect.bottom > H - 10:
             self.rect.bottom = H - 10
 
+class Score:
+    def __init__(self,pos,font):
+        self.score = 0 
+        self.pos = pos
+        self.font = font
+        
+    def draw(self,screen):
+        text = self.font.render(str(self.score), True, (255,255,255))
+        screen.blit(text, self.pos)
+
 class Game:
     def __init__(self):
         pygame.init()
         pygame.display.set_caption("Pong")
         self.screen = pygame.display.set_mode((W,H))
         self.clock = pygame.time.Clock()
+        self.font = pygame.font.SysFont(None,80)
+        
+        #self.p1_score = Score((200,200), self.font)
         self.left_paddle = Paddle((35,H//2),20,130)
         self.right_paddle = Paddle((W-35,H//2),20,130)
         self.ball = Ball(25,(255,255,255))
@@ -102,21 +116,19 @@ class Game:
                 
             self.screen.fill((0,0,0))
             self.draw_net()
-                
-                
+            
+            keys = pygame.key.get_pressed()
+        
+            if keys[pygame.K_UP]:
+                self.right_paddle.move(-10)
+            elif keys[pygame.K_DOWN]:
+                self.right_paddle.move(10)
+            if keys[pygame.K_w]:
+                self.left_paddle.move(-10)
+            elif keys[pygame.K_s]:
+                self.left_paddle.move(10)
+
             if self.play_round:
-                keys = pygame.key.get_pressed()
-                
-                if keys[pygame.K_UP]:
-                    self.right_paddle.move(-10)
-                elif keys[pygame.K_DOWN]:
-                    self.right_paddle.move(10)
-                if keys[pygame.K_w]:
-                    self.left_paddle.move(-10)
-                elif keys[pygame.K_s]:
-                    self.left_paddle.move(10)
-
-
                 if self.ball.rect.colliderect(self.left_paddle):
                     if self.ball.direction[0] < 0:
                         self.ball.direction[0] *= -1
@@ -127,13 +139,13 @@ class Game:
 
                 if self.ball.rect.x < self.ball.width * -1:
                     self.play_round = False
-                    pygame.time.set_timer(self.start_round,3000)
+                    pygame.time.set_timer(self.start_round,3000,1)
 
                 if self.ball.rect.x > W:
                     self.play_round = False
-                    pygame.time.set_timer(self.start_round,3000)
+                    pygame.time.set_timer(self.start_round,3000,1)
                 
-                
+            #self.p1_score.draw(self.screen)
             self.left_paddle.draw(self.screen)
             self.right_paddle.draw(self.screen)
             self.ball.move(self.screen)
