@@ -52,16 +52,6 @@ class Paddle:
         if self.rect.bottom > H - 10:
             self.rect.bottom = H - 10
 
-class Score:
-    def __init__(self,pos,font):
-        self.score = 0 
-        self.pos = pos
-        self.font = font
-        
-    def draw(self,screen):
-        text = self.font.render(str(self.score), True, (255,255,255))
-        screen.blit(text, self.pos)
-
 class Game:
     def __init__(self):
         pygame.init()
