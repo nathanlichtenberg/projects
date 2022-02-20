@@ -52,15 +52,28 @@ class Paddle:
         if self.rect.bottom > H - 10:
             self.rect.bottom = H - 10
 
+class Score:
+
+    def __init__(self, pos, font):
+        self.pos = pos
+        self.font = font
+        self.score = 0
+
+    def draw(self, surface):
+        score_text = self.font.render(str(self.score), True, (255,255,255))
+        surface.blit(score_text,self.pos)
+
+
 class Game:
     def __init__(self):
         pygame.init()
         pygame.display.set_caption("Pong")
         self.screen = pygame.display.set_mode((W,H))
         self.clock = pygame.time.Clock()
-        self.font = pygame.font.SysFont(None,80)
+        self.font = pygame.font.SysFont(None,150)
         
-        #self.p1_score = Score((200,200), self.font)
+        self.p1_score = Score((418,25), self.font)
+        self.p2_score = Score((550,25), self.font)
         self.left_paddle = Paddle((35,H//2),20,130)
         self.right_paddle = Paddle((W-35,H//2),20,130)
         self.ball = Ball(25,(255,255,255))
@@ -129,13 +142,18 @@ class Game:
 
                 if self.ball.rect.x < self.ball.width * -1:
                     self.play_round = False
-                    pygame.time.set_timer(self.start_round,3000,1)
+                    self.p2_score.score += 1
+                    if self.p2_score.score != 5:
+                        pygame.time.set_timer(self.start_round,3000,1)
 
                 if self.ball.rect.x > W:
                     self.play_round = False
-                    pygame.time.set_timer(self.start_round,3000,1)
+                    self.p1_score.score += 1
+                    if self.p1_score.score != 5:
+                        pygame.time.set_timer(self.start_round,3000,1)
                 
-            #self.p1_score.draw(self.screen)
+            self.p1_score.draw(self.screen)
+            self.p2_score.draw(self.screen)
             self.left_paddle.draw(self.screen)
             self.right_paddle.draw(self.screen)
             self.ball.move(self.screen)
