@@ -25,7 +25,10 @@ class Ball:
         if self.show:
             pygame.draw.rect(screen, self.color, self.rect)
 
-
+    def increase_speed(self):
+        speed = self.direction.length()
+        speed += 0.5
+        self.direction.scale_to_length(speed)
 
     def spawn_ball(self):
         self.show = True
@@ -63,6 +66,27 @@ class Score:
         score_text = self.font.render(str(self.score), True, (255,255,255))
         surface.blit(score_text,self.pos)
 
+class StartScreen:
+
+    def __init__(self, font):
+        self.show = True
+        self.button = font.render(str("Start"), True, (0, 0, 0), (255, 255, 255))
+        self.button_rect = self.button.get_rect()
+        self.button_rect.center = (W//2, H//2)
+        self.background = pygame.Surface((W, H))
+        self.background.fill((0, 0, 0))
+        #self.title = pygame.Surface((W-700,H-700))
+        #self.title.fill((255, 255, 255))
+            
+    def draw(self, surface):
+        if self.show:
+            surface.blit(self.background,(0,0))
+            #surface.blit(self.title,(350, 350))
+            surface.blit(self.button, self.button_rect)
+
+    def hide(self):
+        self.show = False
+
 
 class Game:
     def __init__(self):
@@ -77,6 +101,8 @@ class Game:
         self.left_paddle = Paddle((35,H//2),20,130)
         self.right_paddle = Paddle((W-35,H//2),20,130)
         self.ball = Ball(25,(255,255,255))
+        self.start_screen = StartScreen(self.font)
+        
         self.play_round = False
         self.start = True
         self.start_round = pygame.USEREVENT
@@ -107,10 +133,12 @@ class Game:
                     pygame.quit()
                 elif event.type == pygame.MOUSEBUTTONDOWN:
                     if event.button == 1 and self.start:
-                        time.sleep(0.5)
-                        self.play_round = True
-                        self.ball.spawn_ball()
-                        self.start = False
+                        if self.start_screen.button_rect.collidepoint(event.pos):
+                            self.start_screen.hide()
+                            time.sleep(0.5)
+                            self.play_round = True
+                            self.ball.spawn_ball()
+                            self.start = False
 
                 elif event.type == self.start_round:
                     self.play_round = True
@@ -123,22 +151,24 @@ class Game:
             keys = pygame.key.get_pressed()
         
             if keys[pygame.K_UP]:
-                self.right_paddle.move(-10)
+                self.right_paddle.move(-104)
             elif keys[pygame.K_DOWN]:
-                self.right_paddle.move(10)
+                self.right_paddle.move(104)
             if keys[pygame.K_w]:
-                self.left_paddle.move(-10)
+                self.left_paddle.move(-104)
             elif keys[pygame.K_s]:
-                self.left_paddle.move(10)
+                self.left_paddle.move(104)
 
             if self.play_round:
                 if self.ball.rect.colliderect(self.left_paddle):
                     if self.ball.direction[0] < 0:
                         self.ball.direction[0] *= -1
+                        self.ball.increase_speed()
 
                 if self.ball.rect.colliderect(self.right_paddle):
                     if self.ball.direction[0] > 0:
                         self.ball.direction[0] *= -1
+                        self.ball.increase_speed()
 
                 if self.ball.rect.x < self.ball.width * -1:
                     self.play_round = False
@@ -157,6 +187,7 @@ class Game:
             self.left_paddle.draw(self.screen)
             self.right_paddle.draw(self.screen)
             self.ball.move(self.screen)
+            self.start_screen.draw(self.screen)
             pygame.display.update()
             self.clock.tick(60)
 
