@@ -1,9 +1,9 @@
+# -*- coding: utf-8 -*-
 import pygame
 pygame.init()
-screen = pygame.display.set_mode((600,600))
+screen = pygame.display.set_mode((600, 600))
 pygame.display.set_caption("moving_shapes")
 clock = pygame.time.Clock()
-
 
 x = 200
 y = 200
@@ -11,8 +11,7 @@ vel = 7
 
 show = False
 
-ape = pygame.image.load("ape.jpeg").convert_alpha()
-ape = pygame.transform.scale(ape,(50,80))
+ape = pygame.transform.scale(pygame.image.load("ape.jpeg").convert_alpha(), (50, 80))
 
 while True:
     for event in pygame.event.get():
@@ -28,23 +27,21 @@ while True:
 
     if keys[pygame.K_UP]:
         if y >= 10:
-            y-=vel
+            y -= vel
     if keys[pygame.K_DOWN]:
         if y <= 510:
-            y+=vel
+            y += vel
     if keys[pygame.K_LEFT]:
         if x >= 10:
-            x-=vel
+            x -= vel
     if keys[pygame.K_RIGHT]:
         if x <= 540:
-            x+=vel
+            x += vel
 
-    screen.fill((255,255,255))
+    screen.fill((255, 255, 255))
     if show:
-        screen.blit(ape,(x,y))
+        screen.blit(ape, (x, y))
     else:
-        pygame.draw.rect(screen, (0,0,0), (x,y,50,80))
+        pygame.draw.rect(screen, (0, 0, 0), (x, y, 50, 80))
     pygame.display.update()
     clock.tick(60)
-
-

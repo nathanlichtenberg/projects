@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import pygame
 
 W = 600
@@ -9,7 +10,7 @@ y = H - 2 * radius
 up = True
 
 pygame.init()
-screen = pygame.display.set_mode((W,H))
+screen = pygame.display.set_mode((W, H))
 pygame.display.set_caption("moving_shapes")
 clock = pygame.time.Clock()
 
@@ -30,12 +31,7 @@ while True:
     else:
         y += 6
 
-    
-    screen.fill((255,255,255))
-    pygame.draw.ellipse(screen, (0,0,0), (W/2 - radius, y, 2 * radius, 2 * radius))
+    screen.fill((255, 255, 255))
+    pygame.draw.ellipse(screen, (0, 0, 0), (W // 2 - radius, y, 2 * radius, 2 * radius))
     pygame.display.update()
     clock.tick(60)
-
-    
-
-
