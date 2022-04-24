@@ -1,5 +1,6 @@
 import pygame
 from pygame.math import Vector2
+import random
 
 W = 800
 H = 800
@@ -18,9 +19,23 @@ class Snake:
             pygame.draw.rect(screen, (77,153,0), (SQUARE_WIDTH * block[0], SQUARE_WIDTH * block[1], SQUARE_WIDTH, SQUARE_WIDTH))
 
     def move(self):
+        self.tail = self.snake_pos[0]
         self.snake_pos = self.snake_pos[1:]
         last_block = self.snake_pos[-1]
         self.snake_pos.append(last_block + self.direction)
+
+        snake_head = self.get_head()
+        if snake_head[0] < 0 or snake_head[0] > 19:
+            self.reset()
+        if snake_head[1] < 0 or snake_head[1] > 19:
+            self.reset()
+            
+    def get_head(self):
+        return self.snake_pos[-1]
+
+    def grow(self):
+        self.snake_pos = [self.tail] + self.snake_pos
+        
 
     def reset(self):
         self.snake_pos = [Vector2(9,9), Vector2(9,9), Vector2(9,9)]
@@ -28,14 +43,16 @@ class Snake:
         
 class Fruit:
     def __init__(self):
-        self.pos = Vector2(18,18)
-        
+        self.reset()
 
     def draw(self, screen):
         pygame.draw.rect(screen, (255,0,43), (SQUARE_WIDTH * self.pos[0], SQUARE_WIDTH * self.pos[1], SQUARE_WIDTH, SQUARE_WIDTH))
 
-class Grid:
-    pass
+    def reset(self):
+        x = random.randint(0,19)
+        y = random.randint(0,19)
+        self.pos = Vector2(x,y)
+        
 
 class Game:
     def __init__(self):
@@ -57,6 +74,9 @@ class Game:
                     pygame.quit()
                 if event.type == self.SCREEN_UPDATE:
                     self.snake.move()
+                    if self.snake.get_head() == self.fruit.pos:
+                        self.snake.grow()
+                        self.fruit.reset()
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_UP and self.snake.direction != Vector2(0,1):
                         self.snake.direction = Vector2(0,-1)
