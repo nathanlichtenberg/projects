@@ -23,11 +23,14 @@ class Snake:
         self.snake_pos = self.snake_pos[1:]
         last_block = self.snake_pos[-1]
         self.snake_pos.append(last_block + self.direction)
+        self.direction_modified = False
 
         snake_head = self.get_head()
         if snake_head[0] < 0 or snake_head[0] > 19:
             self.reset()
         if snake_head[1] < 0 or snake_head[1] > 19:
+            self.reset()
+        if snake_head in self.snake_pos[:-1]:
             self.reset()
             
     def get_head(self):
@@ -35,19 +38,26 @@ class Snake:
 
     def grow(self):
         self.snake_pos = [self.tail] + self.snake_pos
-        
 
+    def change_direction(self, direction):
+        if self.direction_modified == False:
+            self.direction = direction
+            self.direction_modified = True
+        
     def reset(self):
         self.snake_pos = [Vector2(9,9), Vector2(9,9), Vector2(9,9)]
         self.direction = Vector2(0,0)
+        self.direction_modified = False
         
 class Fruit:
-    def __init__(self):
+    def __init__(self, fruit_pic):
+        self.fruit_pic = fruit_pic
         self.reset()
 
     def draw(self, screen):
-        pygame.draw.rect(screen, (255,0,43), (SQUARE_WIDTH * self.pos[0], SQUARE_WIDTH * self.pos[1], SQUARE_WIDTH, SQUARE_WIDTH))
-
+        #pygame.draw.rect(screen, (255,0,43), (SQUARE_WIDTH * self.pos[0], SQUARE_WIDTH * self.pos[1], SQUARE_WIDTH, SQUARE_WIDTH))
+        screen.blit(self.fruit_pic,self.pos)
+        
     def reset(self):
         x = random.randint(0,19)
         y = random.randint(0,19)
@@ -64,7 +74,10 @@ class Game:
         self.SCREEN_UPDATE = pygame.USEREVENT
         pygame.time.set_timer(self.SCREEN_UPDATE, 100)
 
-        self.fruit = Fruit()
+        fruit_pic = pygame.image.load("fruit.png").convert_alpha()
+        fruit_pic = pygame.transform.scale(fruit_pic,(SQUARE_WIDTH, SQUARE_WIDTH))
+
+        self.fruit = Fruit(fruit_pic)
         self.snake = Snake()
 
     def run(self):
@@ -79,13 +92,13 @@ class Game:
                         self.fruit.reset()
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_UP and self.snake.direction != Vector2(0,1):
-                        self.snake.direction = Vector2(0,-1)
+                        self.snake.change_direction(Vector2(0,-1))
                     if event.key == pygame.K_DOWN and self.snake.direction != Vector2(0,-1):
-                        self.snake.direction = Vector2(0,1)
+                        self.snake.change_direction(Vector2(0,1))
                     if event.key == pygame.K_LEFT and self.snake.direction != Vector2(1,0):
-                        self.snake.direction = Vector2(-1,0)
+                        self.snake.change_direction(Vector2(-1,0))
                     if event.key == pygame.K_RIGHT and self.snake.direction != Vector2(-1,0):
-                        self.snake.direction = Vector2(1,0)
+                        self.snake.change_direction(Vector2(1,0))
 
             self.screen.fill((0,0,0))
             #pygame.draw.rect(self.screen, (0,179,30), (350, 350, 40, 40)
