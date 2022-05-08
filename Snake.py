@@ -32,16 +32,22 @@ class Snake:
         snake_head = self.get_head()
         if snake_head[0] < 0 or snake_head[0] > 19:
             self.reset()
+            return True
         if snake_head[1] < 0 or snake_head[1] > 19:
             self.reset()
+            return True
         if snake_head in self.snake_pos[:-1]:
             self.reset()
+            return True
+
+        return False
             
     def get_head(self):
         return self.snake_pos[-1]
 
     def grow(self):
-        self.snake_pos.insert(0, self.tail)
+        for i in range(1):
+            self.snake_pos.insert(0, self.tail)
 
     def change_direction(self, direction):
         if self.direction_modified == False:
@@ -52,21 +58,37 @@ class Snake:
         self.snake_pos = [Vector2(9, 9), Vector2(9, 9), Vector2(9, 9)]
         self.direction = Vector2(0, 0)
         self.direction_modified = False
+
         
 class Fruit:
-    def __init__(self, fruit_pic):
-        self.fruit_pic = fruit_pic
+    def __init__(self):
         self.reset()
 
     def draw(self, screen):
-        #pygame.draw.rect(screen, (255,0,43), (SQUARE_WIDTH * self.pos[0], SQUARE_WIDTH * self.pos[1], SQUARE_WIDTH, SQUARE_WIDTH))
-        screen.blit(self.fruit_pic,self.pos)
+        pygame.draw.rect(screen, (255, 0, 43), (SQUARE_WIDTH * self.pos[0], SQUARE_WIDTH * self.pos[1], SQUARE_WIDTH, SQUARE_WIDTH))
 
     def reset(self):
         x = random.randint(0, 19)
         y = random.randint(0, 19)
         self.pos = Vector2(x, y)
-        
+
+
+class Score:
+    def __init__(self, pos, font):
+        self.pos = pos
+        self.font = font
+        self.score = 0
+
+    def draw(self, surface):
+        score_text = self.font.render(str(self.score), True, (255, 255, 255))
+        surface.blit(score_text, self.pos)
+
+    def increase(self):
+        self.score += 1
+
+    def reset(self):
+        self.score = 0
+
 
 class Game:
     def __init__(self):
@@ -78,10 +100,10 @@ class Game:
         self.SCREEN_UPDATE = pygame.USEREVENT
         pygame.time.set_timer(self.SCREEN_UPDATE, 100)
 
-        fruit_pic = pygame.image.load("fruit.png").convert_alpha()
-        fruit_pic = pygame.transform.scale(fruit_pic,(SQUARE_WIDTH, SQUARE_WIDTH))
+        self.font = pygame.font.SysFont(None, 100)
+        self.score = Score((W//2,15), self.font)
 
-        self.fruit = Fruit(fruit_pic)
+        self.fruit = Fruit()
         self.snake = Snake()
 
     def run(self):
@@ -90,9 +112,11 @@ class Game:
                 if event.type == pygame.QUIT:
                     pygame.quit()
                 if event.type == self.SCREEN_UPDATE:
-                    self.snake.move()
+                    if self.snake.move():
+                        self.score.reset()
                     if self.snake.get_head() == self.fruit.pos:
                         self.snake.grow()
+                        self.score.increase()
                         self.fruit.reset()
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_UP and self.snake.direction != Vector2(y=1):
@@ -105,10 +129,9 @@ class Game:
                         self.snake.direction = Vector2(1)
 
             self.screen.fill((0, 0, 0))
-            # pygame.draw.rect(self.screen, (0,179,30), (350, 350, 40, 40)
-
             self.fruit.draw(self.screen)
             self.snake.draw(self.screen)
+            self.score.draw(self.screen)
             pygame.display.update()
             self.clock.tick(60)
 
