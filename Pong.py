@@ -8,7 +8,6 @@ W = 1000
 H = 800
 
 class Ball:
-
     def __init__(self,width,color):
         self.color = color
         self.width = width
@@ -38,6 +37,7 @@ class Ball:
         self.direction = Vector2(math.cos(angle),-1*math.sin(angle))
         self.direction.scale_to_length(speed)
 
+
 class Paddle:
     def __init__(self,pos,width,height):
         self.rect = pygame.Rect(0,0,width,height)
@@ -55,8 +55,8 @@ class Paddle:
         if self.rect.bottom > H - 10:
             self.rect.bottom = H - 10
 
-class Score:
 
+class Score:
     def __init__(self, pos, font):
         self.pos = pos
         self.font = font
@@ -66,8 +66,8 @@ class Score:
         score_text = self.font.render(str(self.score), True, (255,255,255))
         surface.blit(score_text,self.pos)
 
-class StartScreen:
 
+class StartScreen:
     def __init__(self, font):
         self.show = True
         self.button = font.render(str("Start"), True, (0, 0, 0), (255, 255, 255))
@@ -108,23 +108,10 @@ class Game:
         self.start_round = pygame.USEREVENT
 
     def draw_net(self):
-        pygame.draw.rect(self.screen,(255,255,255),(W//2,25,25,25))
-        pygame.draw.rect(self.screen,(255,255,255),(W//2,75,25,25))
-        pygame.draw.rect(self.screen,(255,255,255),(W//2,125,25,25))
-        pygame.draw.rect(self.screen,(255,255,255),(W//2,175,25,25))
-        pygame.draw.rect(self.screen,(255,255,255),(W//2,225,25,25))
-        pygame.draw.rect(self.screen,(255,255,255),(W//2,275,25,25))
-        pygame.draw.rect(self.screen,(255,255,255),(W//2,325,25,25))
-        pygame.draw.rect(self.screen,(255,255,255),(W//2,375,25,25))
-        pygame.draw.rect(self.screen,(255,255,255),(W//2,425,25,25))
-        pygame.draw.rect(self.screen,(255,255,255),(W//2,475,25,25))
-        pygame.draw.rect(self.screen,(255,255,255),(W//2,525,25,25))
-        pygame.draw.rect(self.screen,(255,255,255),(W//2,575,25,25))
-        pygame.draw.rect(self.screen,(255,255,255),(W//2,625,25,25))
-        pygame.draw.rect(self.screen,(255,255,255),(W//2,675,25,25))
-        pygame.draw.rect(self.screen,(255,255,255),(W//2,725,25,25))
-        pygame.draw.rect(self.screen,(255,255,255),(W//2,775,25,25))
-
+        value = 25
+        for _ in range(16):
+            pygame.draw.rect(self.screen, (255, 255, 255), (W // 2, value, 25, 25))
+            value += 50
 
     def run(self):
         while True:
@@ -139,12 +126,10 @@ class Game:
                             self.play_round = True
                             self.ball.spawn_ball()
                             self.start = False
-
                 elif event.type == self.start_round:
                     self.play_round = True
                     self.ball.spawn_ball()
 
-                
             self.screen.fill((0,0,0))
             self.draw_net()
             
@@ -174,13 +159,13 @@ class Game:
                     self.play_round = False
                     self.p2_score.score += 1
                     if self.p2_score.score != 5:
-                        pygame.time.set_timer(self.start_round,3000,1)
+                        pygame.time.set_timer(self.start_round, 3000, 1)
 
                 if self.ball.rect.x > W:
                     self.play_round = False
                     self.p1_score.score += 1
                     if self.p1_score.score != 5:
-                        pygame.time.set_timer(self.start_round,3000,1)
+                        pygame.time.set_timer(self.start_round, 3000, 1)
                 
             self.p1_score.draw(self.screen)
             self.p2_score.draw(self.screen)
@@ -190,6 +175,7 @@ class Game:
             self.start_screen.draw(self.screen)
             pygame.display.update()
             self.clock.tick(60)
+
 
 def main():
     g = Game()
