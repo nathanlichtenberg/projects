@@ -22,14 +22,11 @@ while True:
 
     if y <= 0:
         up = False
+        
     if y >= H - 2 * radius:
-
         up = True
 
-    if up:
-        y -= 6
-    else:
-        y += 6
+    y += ((-1) ** up) * 6
 
     screen.fill((255, 255, 255))
     pygame.draw.ellipse(screen, (0, 0, 0), (W // 2 - radius, y, 2 * radius, 2 * radius))
