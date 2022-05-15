@@ -2,8 +2,8 @@ import pygame
 from pygame.math import Vector2
 import random
 
-W = 800
-H = 800
+W = 600
+H = 600
 
 #Width of a single square in pixels
 SQUARE_WIDTH = 40
@@ -26,10 +26,10 @@ class Snake:
         self.direction_modified = False
 
         snake_head = self.get_head()
-        if snake_head[0] < 0 or snake_head[0] > 19:
+        if snake_head[0] < 0 or snake_head[0] >= BLOCK_COUNT:
             self.reset()
             return True
-        if snake_head[1] < 0 or snake_head[1] > 19:
+        if snake_head[1] < 0 or snake_head[1] >= BLOCK_COUNT:
             self.reset()
             return True
         if snake_head in self.snake_pos[:-1]:
@@ -51,7 +51,7 @@ class Snake:
             self.direction_modified = True
         
     def reset(self):
-        self.snake_pos = [Vector2(9,9), Vector2(9,9), Vector2(9,9)]
+        self.snake_pos = [Vector2(7,7), Vector2(7,7), Vector2(7,7)]
         self.direction = Vector2(0,0)
         self.direction_modified = False
         
@@ -64,20 +64,20 @@ class Fruit:
 
         
     def reset(self):
-        x = random.randint(0,19)
-        y = random.randint(0,19)
+        x = random.randint(0,14)
+        y = random.randint(0,14)
         self.pos = Vector2(x,y)
 
 class Score:
 
-    def __init__(self, pos, font):
-        self.pos = pos
+    def __init__(self, font):
         self.font = font
         self.score = 0
 
     def draw(self, surface):
         score_text = self.font.render(str(self.score), True, (255,255,255))
-        surface.blit(score_text,self.pos)
+        score_rect = score_text.get_rect(center = (W//2, 35))
+        surface.blit(score_text,score_rect)
 
     def increase(self):
         self.score += 1
@@ -95,8 +95,11 @@ class Game:
         self.SCREEN_UPDATE = pygame.USEREVENT
         pygame.time.set_timer(self.SCREEN_UPDATE, 100)
 
-        self.font = pygame.font.SysFont(None, 100)
-        self.score = Score((W//2,15), self.font)
+        self.bite_sound = pygame.mixer.Sound("CHOMP.mp3")
+        self.bite_sound.set_volume(0.1)
+
+        self.font = pygame.font.SysFont(None, 75)
+        self.score = Score(self.font)
 
         self.fruit = Fruit()
         self.snake = Snake()
@@ -112,6 +115,7 @@ class Game:
                     if self.snake.get_head() == self.fruit.pos:
                         self.snake.grow()
                         self.score.increase()
+                        pygame.mixer.Sound.play(self.bite_sound)
                         self.fruit.reset()
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_UP and self.snake.direction != Vector2(0,1):
