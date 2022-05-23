@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import pygame
 import random
 import math
@@ -7,17 +8,18 @@ from pygame.math import Vector2
 W = 1000
 H = 800
 
+
 class Ball:
-    def __init__(self,width,color):
+    def __init__(self, width, color):
         self.color = color
         self.width = width
-        self.rect = pygame.Rect(W//2, H//2, self.width, self.width)
-        self.direction = Vector2(0,0)
+        self.rect = pygame.Rect(W // 2, H // 2, self.width, self.width)
+        self.direction = Vector2()
         self.show = False
         
-    def move(self,screen):
+    def move(self, screen):
         if self.rect.y <= 0 or self.rect.y >= H - 2 * self.rect.width:
-            self.direction[1] = -1 * self.direction[1]
+            self.direction[1] *= -1
 
         self.rect.move_ip(self.direction[0], self.direction[1])
 
@@ -31,24 +33,22 @@ class Ball:
 
     def spawn_ball(self):
         self.show = True
-        self.rect = pygame.Rect(W//2, H//2, self.width, self.width)
-        angle = math.radians(random.choice([0,90,180,270]) + random.randint(20,60))
-        speed = random.randint(8,12)
-        self.direction = Vector2(math.cos(angle),-1*math.sin(angle))
+        self.rect = pygame.Rect(W // 2, H // 2, self.width, self.width)
+        angle = math.radians(random.choice([0, 90, 180, 270]) + random.randint(20, 60))
+        speed = random.randint(8, 12)
+        self.direction = Vector2(math.cos(angle), -math.sin(angle))
         self.direction.scale_to_length(speed)
 
 
 class Paddle:
-    def __init__(self,pos,width,height):
-        self.rect = pygame.Rect(0,0,width,height)
+    def __init__(self, pos, width, height):
+        self.rect = pygame.Rect(0, 0, width, height)
         self.rect.center = pos
 
+    def draw(self, surface):
+        pygame.draw.rect(surface, (255, 255, 255), self.rect)
         
-    def draw(self,surface):
-        pygame.draw.rect(surface,(255,255,255),self.rect)
-
-        
-    def move(self,amount):
+    def move(self, amount):
         self.rect.move_ip(0, amount)
         if self.rect.top < 10:
             self.rect.top = 10
@@ -63,8 +63,8 @@ class Score:
         self.score = 0
 
     def draw(self, surface):
-        score_text = self.font.render(str(self.score), True, (255,255,255))
-        surface.blit(score_text,self.pos)
+        score_text = self.font.render(str(self.score), True, (255, 255, 255))
+        surface.blit(score_text, self.pos)
 
 
 class StartScreen:
@@ -72,16 +72,16 @@ class StartScreen:
         self.show = True
         self.button = font.render(str("Start"), True, (0, 0, 0), (255, 255, 255))
         self.button_rect = self.button.get_rect()
-        self.button_rect.center = (W//2, H//2)
+        self.button_rect.center = (W // 2, H // 2)
         self.background = pygame.Surface((W, H))
         self.background.fill((0, 0, 0))
-        #self.title = pygame.Surface((W-700,H-700))
-        #self.title.fill((255, 255, 255))
+        # self.title = pygame.Surface((W - 700,H - 700))
+        # self.title.fill((255, 255, 255))
             
     def draw(self, surface):
         if self.show:
-            surface.blit(self.background,(0,0))
-            #surface.blit(self.title,(350, 350))
+            surface.blit(self.background, (0, 0))
+            # surface.blit(self.title,(350, 350))
             surface.blit(self.button, self.button_rect)
 
     def hide(self):
@@ -92,15 +92,15 @@ class Game:
     def __init__(self):
         pygame.init()
         pygame.display.set_caption("Pong")
-        self.screen = pygame.display.set_mode((W,H))
+        self.screen = pygame.display.set_mode((W, H))
         self.clock = pygame.time.Clock()
-        self.font = pygame.font.SysFont(None,150)
+        self.font = pygame.font.SysFont(None, 150)
         
-        self.p1_score = Score((418,25), self.font)
-        self.p2_score = Score((550,25), self.font)
-        self.left_paddle = Paddle((35,H//2),20,130)
-        self.right_paddle = Paddle((W-35,H//2),20,130)
-        self.ball = Ball(25,(255,255,255))
+        self.p1_score = Score((418, 25), self.font)
+        self.p2_score = Score((550, 25), self.font)
+        self.left_paddle = Paddle((35, H // 2), 20, 130)
+        self.right_paddle = Paddle((W - 35, H // 2), 20, 130)
+        self.ball = Ball(25, (255, 255, 255))
         self.start_screen = StartScreen(self.font)
         
         self.play_round = False
@@ -126,11 +126,12 @@ class Game:
                             self.play_round = True
                             self.ball.spawn_ball()
                             self.start = False
+
                 elif event.type == self.start_round:
                     self.play_round = True
                     self.ball.spawn_ball()
 
-            self.screen.fill((0,0,0))
+            self.screen.fill((0, 0, 0))
             self.draw_net()
             
             keys = pygame.key.get_pressed()
