@@ -36,7 +36,7 @@ class Ball:
         self.rect = pygame.Rect(W // 2, H // 2, self.width, self.width)
         angle = math.radians(random.choice([0, 90, 180, 270]) + random.randint(20, 60))
         speed = random.randint(8, 12)
-        self.direction = Vector2(math.cos(angle), -1*math.sin(angle))
+        self.direction = Vector2(math.cos(angle), -math.sin(angle))
         self.direction.scale_to_length(speed)
 
 
@@ -72,10 +72,10 @@ class StartScreen:
         self.show = True
         self.button = font.render(str("Start"), True, (0, 0, 0), (255, 255, 255))
         self.button_rect = self.button.get_rect()
-        self.button_rect.center = (W//2, H//2)
+        self.button_rect.center = (W // 2, H // 2)
         self.background = pygame.Surface((W, H))
         self.background.fill((0, 0, 0))
-        # self.title = pygame.Surface((W-700,H-700))
+        # self.title = pygame.Surface((W - 700,H - 700))
         # self.title.fill((255, 255, 255))
             
     def draw(self, surface):
