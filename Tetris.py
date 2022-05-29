@@ -3,7 +3,7 @@ from pygame.math import Vector2
 import random
 
 W = 600
-H = 600
+H = 700
 
 #Width of a single square in pixels
 SQUARE_WIDTH = 40
@@ -19,16 +19,32 @@ class Fruit:
     def draw(self, screen):
         pygame.draw.rect(screen, (255,0,43), (SQUARE_WIDTH * self.pos[0], SQUARE_WIDTH * self.pos[1], SQUARE_WIDTH, SQUARE_WIDTH))
 
+class Grid:
+    def __init__(self):
+        self.surface = pygame.Surface((300,600))
+        self.surface.fill((0,0,0))
+
+    def draw(self, screen):
+        screen.blit(self.surface,(20,80))
+
+
+
+
 class Game:
     def __init__(self):
         pygame.init()
-        pygame.display.set_caption("Snake")
+        pygame.font.init()
+        pygame.display.set_caption("Tetris")
         self.screen = pygame.display.set_mode((W,H))
         self.clock = pygame.time.Clock()
 
         self.SCREEN_UPDATE = pygame.USEREVENT
         pygame.time.set_timer(self.SCREEN_UPDATE, 100)
 
+        font = pygame.font.SysFont("LcdSolid-VPzB.ttf", 60)
+        self.title = font.render("TETRIS", False, (255,255,255))
+        
+        self.grid = Grid()
         self.fruit = Fruit()
         
     def run(self):
@@ -41,7 +57,9 @@ class Game:
                 if event.type == pygame.KEYDOWN:
                     pass
 
-            self.screen.fill((0,0,0))
+            self.screen.fill((160,160,160))
+            self.screen.blit(self.title, (W//2, 50))
+            self.grid.draw(self.screen)
             self.fruit.draw(self.screen)
             pygame.display.update()
             self.clock.tick(60)
