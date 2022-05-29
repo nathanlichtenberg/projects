@@ -47,7 +47,7 @@ class Snake:
         return self.snake_pos[-1]
 
     def grow(self):
-        for i in range(1):
+        for i in range(35):
             self.snake_pos.insert(0, self.tail)
 
     def change_direction(self, direction):
@@ -104,7 +104,7 @@ class Game:
         pygame.time.set_timer(self.SCREEN_UPDATE, 100)
 
         self.bite_sound = pygame.mixer.Sound("CHOMP.mp3")
-        self.bite_sound.set_volume(0.1)
+        self.bite_sound.set_volume(1)
 
         self.font = pygame.font.SysFont(None, 75)
         self.score = Score(self.font)
