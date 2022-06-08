@@ -8,26 +8,26 @@ H = 700
 #Width of a single square in pixels
 SQUARE_WIDTH = 40
 #Number of blocks on an edge
-BLOCK_COUNT = W//SQUARE_WIDTH
+BLOCK_COUNT = W // SQUARE_WIDTH
 
 class Fruit:
     def __init__(self):
-        x = random.randint(0,14)
-        y = random.randint(0,14)
-        self.pos = Vector2(x,y)
+        x = random.randint(0, 14)
+        y = random.randint(0, 14)
+        self.pos = Vector2(x, y)
 
     def draw(self, screen):
-        pygame.draw.rect(screen, (255,0,43), (SQUARE_WIDTH * self.pos[0], SQUARE_WIDTH * self.pos[1], SQUARE_WIDTH, SQUARE_WIDTH))
+        pygame.draw.rect(screen, (255, 0, 43), (SQUARE_WIDTH * 
+self.pos[0], SQUARE_WIDTH * self.pos[1], SQUARE_WIDTH, SQUARE_WIDTH))
+
 
 class Grid:
     def __init__(self):
-        self.surface = pygame.Surface((300,600))
-        self.surface.fill((0,0,0))
+        self.surface = pygame.Surface((300, 600))
+        self.surface.fill((0, 0, 0))
 
     def draw(self, screen):
-        screen.blit(self.surface,(20,80))
-
-
+        screen.blit(self.surface,(20, 80))
 
 
 class Game:
@@ -35,14 +35,14 @@ class Game:
         pygame.init()
         pygame.font.init()
         pygame.display.set_caption("Tetris")
-        self.screen = pygame.display.set_mode((W,H))
+        self.screen = pygame.display.set_mode((W, H))
         self.clock = pygame.time.Clock()
 
         self.SCREEN_UPDATE = pygame.USEREVENT
         pygame.time.set_timer(self.SCREEN_UPDATE, 100)
 
         font = pygame.font.SysFont("LcdSolid-VPzB.ttf", 60)
-        self.title = font.render("TETRIS", False, (255,255,255))
+        self.title = font.render("TETRIS", False, (255, 255, 255))
         
         self.grid = Grid()
         self.fruit = Fruit()
@@ -57,14 +57,12 @@ class Game:
                 if event.type == pygame.KEYDOWN:
                     pass
 
-            self.screen.fill((160,160,160))
-            self.screen.blit(self.title, (W//2, 50))
+            self.screen.fill((160, 160, 160))
+            self.screen.blit(self.title, (W // 2, 50))
             self.grid.draw(self.screen)
             self.fruit.draw(self.screen)
             pygame.display.update()
             self.clock.tick(60)
-
-
 
 
 def main():
@@ -73,4 +71,3 @@ def main():
     
 if __name__ == "__main__":
     main()
-

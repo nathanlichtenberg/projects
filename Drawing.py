@@ -44,9 +44,9 @@ clock = pygame.time.Clock()
 
 ball = Ball(Vector2(10, 10), 15, colors[0])
 click_pos = []
-button_gray = Button(W-50, 0, 50, 50, screen, colors[0])
-button_red = Button(W-50, 50, 50, 50, screen, colors[1])
-button_yellow = Button(W-50, 100, 50, 50, screen, colors[2])
+button_gray = Button(W - 50, 0, 50, 50, screen, colors[0])
+button_red = Button(W - 50, 50, 50, 50, screen, colors[1])
+button_yellow = Button(W - 50, 100, 50, 50, screen, colors[2])
 button_blue = Button(W-50, 150, 50, 50, screen, colors[3])
 buttons = [button_gray, button_red, button_yellow, button_blue]
 
