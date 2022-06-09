@@ -27,7 +27,7 @@ class Grid:
         self.surface.fill((0, 0, 0))
 
     def draw(self, screen):
-        screen.blit(self.surface,(20, 80))
+        screen.blit(self.surface, (20, 80))
 
 
 class Game:
