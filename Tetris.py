@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import pygame
 from pygame.math import Vector2
 import random
@@ -8,7 +9,7 @@ H = 700
 GRID_W = 300
 GRID_H = 600
 
-#Number of blocks on bottom edge
+# Number of blocks on bottom edge
 BLOCK_COUNT = 10
 
 # Width of a single square in pixels

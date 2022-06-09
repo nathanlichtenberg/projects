@@ -68,6 +68,7 @@ while True:
                         ball.color = button.color
                 if trash_rect.collidepoint(event.pos):
                     click_pos = []
+
     screen.fill((255, 255, 255))
     for point in click_pos:
         color = point.color

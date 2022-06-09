@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import pygame
+
 pygame.init()
 screen = pygame.display.set_mode((600, 600))
 pygame.display.set_caption("moving_shapes")
@@ -7,7 +8,7 @@ clock = pygame.time.Clock()
 
 x = 200
 y = 200
-vel = 7
+vel = 7  # Velocity
 
 show = False
 

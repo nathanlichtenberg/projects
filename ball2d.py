@@ -41,11 +41,10 @@ screen = pygame.display.set_mode((W, H))
 pygame.display.set_caption("ball_bounce_spawn")
 clock = pygame.time.Clock()
 
-# ball1 = Ball(Vector2(10,10),Vector2(15,15),30,(132,255,123))
-# ball2 = Ball(Vector2(390,390),Vector2(10,10),50,(71,28,182))
+# ball1 = Ball(Vector2(10, 10), Vector2(15, 15), 30, (132, 255, 123))
+# ball2 = Ball(Vector2(390, 390), Vector2(10, 10), 50, (71, 28, 182))
 
 balls = []
-
 
 while True:
     for event in pygame.event.get():

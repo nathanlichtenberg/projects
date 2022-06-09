@@ -11,6 +11,7 @@ SQUARE_WIDTH = 40
 # Number of blocks on an edge
 BLOCK_COUNT = W // SQUARE_WIDTH
 
+
 class Fruit:
     def __init__(self):
         x = random.randint(0, 14)
@@ -48,12 +49,9 @@ class Game:
             self.clock.tick(60)
 
 
-
-
 def main():
     g = Game()
     g.run()
     
 if __name__ == "__main__":
     main()
-

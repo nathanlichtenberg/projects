@@ -33,7 +33,7 @@ while True:
         if event.type == pygame.QUIT:
             pygame.quit()
         
-    screen.fill((255,255,255))
+    screen.fill((255, 255, 255))
     ball.move()
     pygame.display.update()
     clock.tick(60)

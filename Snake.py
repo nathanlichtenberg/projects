@@ -6,10 +6,8 @@ import random
 W = 600
 H = 600
 
-# Width of a single square in pixels
-SQUARE_WIDTH = 40
-# Number of blocks on an edge
-BLOCK_COUNT = W // SQUARE_WIDTH
+SQUARE_WIDTH = 40  # Width of a single square in pixels
+BLOCK_COUNT = W // SQUARE_WIDTH  # Number of blocks on an edge
 
 
 class Snake:

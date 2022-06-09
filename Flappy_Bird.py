@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import pygame
 pygame.init()
 screen = pygame.display.set_mode((600, 600))
@@ -13,5 +14,3 @@ while True:
     pygame.draw.rect(screen, (0, 0, 0), (200, 200, 50, 80))
     pygame.display.update()
     clock.tick(60)
-
-

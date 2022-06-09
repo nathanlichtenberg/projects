@@ -167,7 +167,7 @@ class Game:
                     self.p1_score.score += 1
                     if self.p1_score.score != 5:
                         pygame.time.set_timer(self.start_round, 3000, 1)
-                
+
             self.p1_score.draw(self.screen)
             self.p2_score.draw(self.screen)
             self.left_paddle.draw(self.screen)
