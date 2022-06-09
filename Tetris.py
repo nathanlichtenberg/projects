@@ -5,25 +5,34 @@ import random
 W = 600
 H = 700
 
-#Width of a single square in pixels
-SQUARE_WIDTH = 40
-#Number of blocks on an edge
-BLOCK_COUNT = W // SQUARE_WIDTH
+GRID_W = 300
+GRID_H = 600
 
-class Fruit:
+#Number of blocks on bottom edge
+BLOCK_COUNT = 10
+
+# Width of a single square in pixels
+SQUARE_WIDTH = GRID_W // BLOCK_COUNT
+
+class Block:
     def __init__(self):
-        x = random.randint(0, 14)
-        y = random.randint(0, 14)
-        self.pos = Vector2(x, y)
+        x = random.randint(0,BLOCK_COUNT)
+        y = random.randint(0,20)
+        self.pos = Vector2(x,y)
 
-    def draw(self, screen):
-        pygame.draw.rect(screen, (255, 0, 43), (SQUARE_WIDTH * 
-self.pos[0], SQUARE_WIDTH * self.pos[1], SQUARE_WIDTH, SQUARE_WIDTH))
+    def left(self):
+        self.pos[0]-= 1
 
+    def right(self):
+        self.pos[0]+= 1
+        
+    def draw(self, grid):
+        pygame.draw.rect(grid.surface, (255, 0, 43), (SQUARE_WIDTH * self.pos[0], SQUARE_WIDTH * self.pos[1], SQUARE_WIDTH, SQUARE_WIDTH))
+        grid.surface.update()
 
 class Grid:
     def __init__(self):
-        self.surface = pygame.Surface((300, 600))
+        self.surface = pygame.Surface((GRID_W, GRID_H))
         self.surface.fill((0, 0, 0))
 
     def draw(self, screen):
@@ -41,11 +50,12 @@ class Game:
         self.SCREEN_UPDATE = pygame.USEREVENT
         pygame.time.set_timer(self.SCREEN_UPDATE, 100)
 
-        font = pygame.font.SysFont("LcdSolid-VPzB.ttf", 60)
+        font = pygame.font.Font("LcdSolid-VPzB.ttf", 60)
         self.title = font.render("TETRIS", False, (255, 255, 255))
-        
+        self.title_rect = self.title.get_rect(center = (W // 2, 44))
+
         self.grid = Grid()
-        self.fruit = Fruit()
+        self.block = Block()
         
     def run(self):
         while True:
@@ -55,12 +65,17 @@ class Game:
                 if event.type == self.SCREEN_UPDATE:
                     pass
                 if event.type == pygame.KEYDOWN:
-                    pass
+                    if event.key == pygame.K_DOWN:
+                        pass
+                    if event.key == pygame.K_LEFT:
+                        self.block.left()
+                    if event.key == pygame.K_RIGHT:
+                        self.block.right()
 
             self.screen.fill((160, 160, 160))
-            self.screen.blit(self.title, (W // 2, 50))
+            self.screen.blit(self.title, self.title_rect)
             self.grid.draw(self.screen)
-            self.fruit.draw(self.screen)
+            self.block.draw(self.grid)
             pygame.display.update()
             self.clock.tick(60)
 
