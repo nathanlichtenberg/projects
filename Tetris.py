@@ -9,26 +9,38 @@ GRID_W = 300
 GRID_H = 600
 
 #Number of blocks on bottom edge
-BLOCK_COUNT = 10
+BLOCK_COUNT_W = 10
+BLOCK_COUNT_H = 20
 
 #Width of a single square in pixels
-SQUARE_WIDTH = GRID_W//BLOCK_COUNT
+SQUARE_WIDTH = GRID_W//BLOCK_COUNT_W
 
 class Block:
     def __init__(self):
-        x = random.randint(0,BLOCK_COUNT)
-        y = random.randint(0,20)
-        self.pos = Vector2(x,y)
+        self.pos = Vector2(BLOCK_COUNT_W//2,0)
 
     def left(self):
-        self.pos[0]-= 1
+        if self.pos[0] > 0:
+            self.pos[0]-= 1
 
     def right(self):
-        self.pos[0]+= 1
+        if self.pos[0] < BLOCK_COUNT_W - 1:
+            self.pos[0]+= 1
+
+    def down(self):
+        if self.pos[1] < BLOCK_COUNT_H - 1:
+            self.pos[1]+= 1
+
+    def soft_drop(self):
+        pass
+
+    def hard_drop(self):
+        self.pos[1] = BLOCK_COUNT_H - 1
         
     def draw(self, grid):
+        grid.surface.fill((0,0,0))
         pygame.draw.rect(grid.surface, (255,0,43), (SQUARE_WIDTH * self.pos[0], SQUARE_WIDTH * self.pos[1], SQUARE_WIDTH, SQUARE_WIDTH))
-        grid.surface.update()
+        
 
 class Grid:
     def __init__(self):
@@ -50,7 +62,7 @@ class Game:
         self.clock = pygame.time.Clock()
 
         self.SCREEN_UPDATE = pygame.USEREVENT
-        pygame.time.set_timer(self.SCREEN_UPDATE, 100)
+        pygame.time.set_timer(self.SCREEN_UPDATE, 300)
 
         font = pygame.font.Font("LcdSolid-VPzB.ttf", 60)
         self.title = font.render("TETRIS", False, (255,255,255))
@@ -65,14 +77,16 @@ class Game:
                 if event.type == pygame.QUIT:
                     pygame.quit()
                 if event.type == self.SCREEN_UPDATE:
-                    pass
+                    self.block.down()
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_DOWN:
-                        pass
+                        self.block.soft_drop()
                     if event.key == pygame.K_LEFT:
                         self.block.left()
                     if event.key == pygame.K_RIGHT:
                         self.block.right()
+                    if event.key == pygame.K_SPACE:
+                        self.block.hard_drop()
 
             self.screen.fill((160,160,160))
             self.screen.blit(self.title, self.title_rect)

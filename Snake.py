@@ -43,60 +43,7 @@ class Snake:
 
     def grow(self):
         self.snake_pos = [self.tail] + self.snake_pos
-        self.snake_pos = [self.tail] + self.snake_pos
-        self.snake_pos = [self.tail] + self.snake_pos
-        self.snake_pos = [self.tail] + self.snake_pos
-        self.snake_pos = [self.tail] + self.snake_pos
-        self.snake_pos = [self.tail] + self.snake_pos
-        self.snake_pos = [self.tail] + self.snake_pos
-        self.snake_pos = [self.tail] + self.snake_pos
-        self.snake_pos = [self.tail] + self.snake_pos
-        self.snake_pos = [self.tail] + self.snake_pos
-        self.snake_pos = [self.tail] + self.snake_pos
-        self.snake_pos = [self.tail] + self.snake_pos
-        self.snake_pos = [self.tail] + self.snake_pos
-        self.snake_pos = [self.tail] + self.snake_pos
-        self.snake_pos = [self.tail] + self.snake_pos
-        self.snake_pos = [self.tail] + self.snake_pos
-        self.snake_pos = [self.tail] + self.snake_pos
-        self.snake_pos = [self.tail] + self.snake_pos
-        self.snake_pos = [self.tail] + self.snake_pos
-        self.snake_pos = [self.tail] + self.snake_pos
-        self.snake_pos = [self.tail] + self.snake_pos
-        self.snake_pos = [self.tail] + self.snake_pos
-        self.snake_pos = [self.tail] + self.snake_pos
-        self.snake_pos = [self.tail] + self.snake_pos
-        self.snake_pos = [self.tail] + self.snake_pos
-        self.snake_pos = [self.tail] + self.snake_pos
-        self.snake_pos = [self.tail] + self.snake_pos
-        self.snake_pos = [self.tail] + self.snake_pos
-        self.snake_pos = [self.tail] + self.snake_pos
-        self.snake_pos = [self.tail] + self.snake_pos
-        self.snake_pos = [self.tail] + self.snake_pos
-        self.snake_pos = [self.tail] + self.snake_pos
-        self.snake_pos = [self.tail] + self.snake_pos
-        self.snake_pos = [self.tail] + self.snake_pos
-        self.snake_pos = [self.tail] + self.snake_pos
-        self.snake_pos = [self.tail] + self.snake_pos
-        self.snake_pos = [self.tail] + self.snake_pos
-        self.snake_pos = [self.tail] + self.snake_pos
-        self.snake_pos = [self.tail] + self.snake_pos
-        self.snake_pos = [self.tail] + self.snake_pos
-        self.snake_pos = [self.tail] + self.snake_pos
-        self.snake_pos = [self.tail] + self.snake_pos
-        self.snake_pos = [self.tail] + self.snake_pos
-        self.snake_pos = [self.tail] + self.snake_pos
-        self.snake_pos = [self.tail] + self.snake_pos
-        self.snake_pos = [self.tail] + self.snake_pos
-        self.snake_pos = [self.tail] + self.snake_pos
-        self.snake_pos = [self.tail] + self.snake_pos
-        self.snake_pos = [self.tail] + self.snake_pos
-        self.snake_pos = [self.tail] + self.snake_pos
-        self.snake_pos = [self.tail] + self.snake_pos
-        self.snake_pos = [self.tail] + self.snake_pos
-        self.snake_pos = [self.tail] + self.snake_pos
-        self.snake_pos = [self.tail] + self.snake_pos
-
+        
     def change_direction(self, direction):
         if self.direction_modified == False:
             self.direction = direction
