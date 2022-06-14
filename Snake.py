@@ -45,8 +45,7 @@ class Snake:
         return self.snake_pos[-1]
 
     def grow(self):
-        for i in range(35):
-            self.snake_pos.insert(0, self.tail)
+        self.snake_pos.insert(0, self.tail)
 
     def change_direction(self, direction):
         if not self.direction_modified:
