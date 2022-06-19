@@ -17,8 +17,9 @@ SQUARE_WIDTH = GRID_W//BLOCK_COUNT_W
 
 class Block:
     def __init__(self):
-        self.pos = Vector2(BLOCK_COUNT_W//2,0)
-
+        self.pos = Vector2(BLOCK_COUNT_W//2, BLOCK_COUNT_H//2)
+        self.blocks = [Vector2(0,0), Vector2(0,1),Vector2(0,-1),Vector2(1,0)]
+        
     def left(self):
         if self.pos[0] > 0:
             self.pos[0]-= 1
@@ -32,15 +33,17 @@ class Block:
             self.pos[1]+= 1
 
     def soft_drop(self):
-        pass
+        if self.pos[1] < BLOCK_COUNT_H - 1:
+            self.pos[1]+= 1
 
     def hard_drop(self):
         self.pos[1] = BLOCK_COUNT_H - 1
         
     def draw(self, grid):
         grid.surface.fill((0,0,0))
-        pygame.draw.rect(grid.surface, (255,0,43), (SQUARE_WIDTH * self.pos[0], SQUARE_WIDTH * self.pos[1], SQUARE_WIDTH, SQUARE_WIDTH))
-        
+        for block in self.blocks:
+            block_pos = self.pos + block
+            pygame.draw.rect(grid.surface, (255,0,43), (SQUARE_WIDTH * block_pos[0], SQUARE_WIDTH * block_pos[1], SQUARE_WIDTH, SQUARE_WIDTH))
 
 class Grid:
     def __init__(self):
@@ -76,8 +79,8 @@ class Game:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
-                if event.type == self.SCREEN_UPDATE:
-                    self.block.down()
+                #if event.type == self.SCREEN_UPDATE:
+                    #self.block.down()
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_DOWN:
                         self.block.soft_drop()
@@ -101,4 +104,3 @@ def main():
     
 if __name__ == "__main__":
     main()
-
