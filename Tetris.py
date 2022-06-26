@@ -16,10 +16,15 @@ BLOCK_COUNT_H = 20
 SQUARE_WIDTH = GRID_W//BLOCK_COUNT_W
 
 class Block:
-    def __init__(self):
+    def __init__(self, shape):
         self.pos = Vector2(BLOCK_COUNT_W//2, BLOCK_COUNT_H//2)
-        self.blocks = [Vector2(0,0), Vector2(0,1),Vector2(0,-1),Vector2(1,0)]
+        self.blocks = shape
         
+    def rotate(self):
+        for block in self.blocks:
+            block.rotate_ip(-90)
+
+    
     def left(self):
         if self.pos[0] > 0:
             self.pos[0]-= 1
@@ -71,17 +76,26 @@ class Game:
         self.title = font.render("TETRIS", False, (255,255,255))
         self.title_rect = self.title.get_rect(center = (W//2, 44))
 
+        self.shapes = [
+            [Vector2(0,0), Vector2(-1,0),Vector2(-1,-1),Vector2(-1,1)],    #Triangle shape
+            [Vector2(0,0), Vector2(0,1),Vector2(0,2),Vector2(0,-1)],     #Vertical Line
+            [Vector2(0,0), Vector2(-1,1),Vector2(0,1),Vector2(0,-1)],     #L-Shape
+            [Vector2(0,0), Vector2(-1,-1),Vector2(0,-1),Vector2(1,0)],    #The "S" Shape         
+        ]
+        
         self.grid = Grid()
-        self.block = Block()
+        self.block = Block(self.shapes[3])
         
     def run(self):
         while True:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
-                #if event.type == self.SCREEN_UPDATE:
-                    #self.block.down()
+                if event.type == self.SCREEN_UPDATE:
+                    self.block.down()
                 if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_UP:
+                        self.block.rotate()
                     if event.key == pygame.K_DOWN:
                         self.block.soft_drop()
                     if event.key == pygame.K_LEFT:
