@@ -17,9 +17,16 @@ BLOCK_COUNT_H = 20
 SQUARE_WIDTH = GRID_W // BLOCK_COUNT_W
 
 class Block:
-    def __init__(self):
-        self.pos = Vector2(BLOCK_COUNT_W//2,0)
+    def __init__(self, shape, color):
+        self.pos = Vector2(BLOCK_COUNT_W//2, 0)
+        self.blocks = shape
+        self.color = color
+        
+    def rotate(self):
+        for block in self.blocks:
+            block.rotate_ip(-90)
 
+    
     def left(self):
         if self.pos[0] > 0:
             self.pos[0]-= 1
@@ -33,15 +40,17 @@ class Block:
             self.pos[1]+= 1
 
     def soft_drop(self):
-        pass
+        if self.pos[1] < BLOCK_COUNT_H - 1:
+            self.pos[1]+= 1
 
     def hard_drop(self):
         self.pos[1] = BLOCK_COUNT_H - 1
         
     def draw(self, grid):
         grid.surface.fill((0, 0, 0))
-        pygame.draw.rect(grid.surface, (255, 0, 43), (SQUARE_WIDTH * self.pos[0], SQUARE_WIDTH * self.pos[1], SQUARE_WIDTH, SQUARE_WIDTH))
-        
+        for block in self.blocks:
+            block_pos = self.pos + block
+            pygame.draw.rect(grid.surface, self.color, (SQUARE_WIDTH * block_pos[0], SQUARE_WIDTH * block_pos[1], SQUARE_WIDTH, SQUARE_WIDTH))
 
 class Grid:
     def __init__(self):
@@ -67,8 +76,18 @@ class Game:
         self.title = font.render("TETRIS", False, (255, 255, 255))
         self.title_rect = self.title.get_rect(center = (W // 2, 44))
 
+        self.shapes = [
+            [Vector2(0,0), Vector2(-1,0),Vector2(-1,-1),Vector2(-1,1)],    #Triangle shape
+            [Vector2(0,0), Vector2(0,1),Vector2(0,2),Vector2(0,-1)],     #Vertical Line
+            [Vector2(0,0), Vector2(-1,1),Vector2(0,1),Vector2(0,-1)],     #left L-Shape
+            [Vector2(0,0), Vector2(1,1),Vector2(0,1),Vector2(0,-1)],     #right L-Shape
+            [Vector2(0,0), Vector2(-1,-1),Vector2(0,-1),Vector2(1,0)],    #The "S" Shape         
+        ]
+        self.colors = [(255,12,114),(15,255,115),(255,142,14),(245,56,255),(255,225,56)]
+        
         self.grid = Grid()
-        self.block = Block()
+        choice = random.randint(0,4)
+        self.block = Block(self.shapes[choice],self.colors[choice])
         
     def run(self):
         while True:
@@ -78,6 +97,8 @@ class Game:
                 if event.type == self.SCREEN_UPDATE:
                     self.block.down()
                 if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_UP:
+                        self.block.rotate()
                     if event.key == pygame.K_DOWN:
                         self.block.soft_drop()
                     if event.key == pygame.K_LEFT:
