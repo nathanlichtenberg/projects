@@ -16,9 +16,10 @@ BLOCK_COUNT_H = 20
 SQUARE_WIDTH = GRID_W//BLOCK_COUNT_W
 
 class Block:
-    def __init__(self, shape):
-        self.pos = Vector2(BLOCK_COUNT_W//2, BLOCK_COUNT_H//2)
+    def __init__(self, shape, color):
+        self.pos = Vector2(BLOCK_COUNT_W//2, 0)
         self.blocks = shape
+        self.color = color
         
     def rotate(self):
         for block in self.blocks:
@@ -48,7 +49,7 @@ class Block:
         grid.surface.fill((0,0,0))
         for block in self.blocks:
             block_pos = self.pos + block
-            pygame.draw.rect(grid.surface, (255,0,43), (SQUARE_WIDTH * block_pos[0], SQUARE_WIDTH * block_pos[1], SQUARE_WIDTH, SQUARE_WIDTH))
+            pygame.draw.rect(grid.surface, self.color, (SQUARE_WIDTH * block_pos[0], SQUARE_WIDTH * block_pos[1], SQUARE_WIDTH, SQUARE_WIDTH))
 
 class Grid:
     def __init__(self):
@@ -79,12 +80,15 @@ class Game:
         self.shapes = [
             [Vector2(0,0), Vector2(-1,0),Vector2(-1,-1),Vector2(-1,1)],    #Triangle shape
             [Vector2(0,0), Vector2(0,1),Vector2(0,2),Vector2(0,-1)],     #Vertical Line
-            [Vector2(0,0), Vector2(-1,1),Vector2(0,1),Vector2(0,-1)],     #L-Shape
+            [Vector2(0,0), Vector2(-1,1),Vector2(0,1),Vector2(0,-1)],     #left L-Shape
+            [Vector2(0,0), Vector2(1,1),Vector2(0,1),Vector2(0,-1)],     #right L-Shape
             [Vector2(0,0), Vector2(-1,-1),Vector2(0,-1),Vector2(1,0)],    #The "S" Shape         
         ]
+        self.colors = [(255,12,114),(15,255,115),(255,142,14),(245,56,255),(255,225,56)]
         
         self.grid = Grid()
-        self.block = Block(self.shapes[3])
+        choice = random.randint(0,4)
+        self.block = Block(self.shapes[choice],self.colors[choice])
         
     def run(self):
         while True:
