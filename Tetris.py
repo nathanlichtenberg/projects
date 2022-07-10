@@ -22,16 +22,17 @@ class Block:
         self.color = color
         
     def rotate(self):
-        for block in self.blocks:
-            block.rotate_ip(-90)
+        rotated_blocks = [block.rotate(-90) for block in self.blocks]
+        print(rotated_blocks)
+        if all([0 < block[0] < BLOCK_COUNT_W - 1 for block in rotated_blocks]):
+            self.blocks = rotated_blocks
 
-    
     def left(self):
-        if self.pos[0] > 0:
+        if all([self.pos[0] + block[0] > 0 for block in self.blocks]):
             self.pos[0]-= 1
 
     def right(self):
-        if self.pos[0] < BLOCK_COUNT_W - 1:
+        if all([self.pos[0] + block[0] < BLOCK_COUNT_W - 1 for block in self.blocks]):
             self.pos[0]+= 1
 
     def down(self):

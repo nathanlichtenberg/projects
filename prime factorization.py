@@ -1,14 +1,38 @@
-from sympy import *
+import time
+import math
 
-while True:
-    number = int(input("> "))
+
+counter = 0
+
+while counter == 0:
+    number = int(input("Your Number: "))
     primefac = []
-    while number != 1:
-    #find the smallest prime factor of number
-        for i in range(1,number + 1):
-            if isprime(i) and number % i == 0:
-                primefac.append(i)
-                number //= i
-                break
+    startTime = time.time()
+    if number == 1:
+        print("[1]")
+        continue
+
+    elif number == 0:
+        print("[0]")
+        continue
+
+    elif number < 0:
+        print("[no.]")
+        continue
             
+    else:
+        for i in range(2, int(math.sqrt(number))):
+            if number % i == 0:
+                prime = True
+                if prime:
+                    primefac.append(i)
+                    number //= i
+
+        primefac.append(number)
+
     print(primefac)
+    counter += 1
+
+executionTime = (time.time() - startTime)
+print('Execution time in seconds: ' + str(executionTime))
+
