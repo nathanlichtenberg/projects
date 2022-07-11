@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
+import random
 import pygame
 from pygame.math import Vector2
-import random
 
 W = 600
 H = 700
@@ -16,26 +16,33 @@ BLOCK_COUNT_H = 20
 # Width of a single square in pixels
 SQUARE_WIDTH = GRID_W // BLOCK_COUNT_W
 
+
 class Block:
     def __init__(self):
-        self.pos = Vector2(BLOCK_COUNT_W//2, BLOCK_COUNT_H//2)
-        self.blocks = [Vector2(0,0), Vector2(0,1),Vector2(0,-1),Vector2(1,0)]
-        
+        self.pos = Vector2(BLOCK_COUNT_W // 2, BLOCK_COUNT_H // 2)
+        self.blocks = [Vector2(0, 0), Vector2(0, 1), Vector2(0, -1), Vector2(1, 0)]
+
+    def rotate(self):
+        rotated_blocks = [block.rotate(-90) for block in self.blocks]
+        print(rotated_blocks)
+        if all([0 < block[0] < BLOCK_COUNT_W - 1 for block in rotated_blocks]):
+            self.blocks = rotated_blocks
+
     def left(self):
-        if self.pos[0] > 0:
-            self.pos[0]-= 1
+        if all([self.pos[0] + block[0] > 0 for block in self.blocks]):
+            self.pos[0] -= 1
 
     def right(self):
-        if self.pos[0] < BLOCK_COUNT_W - 1:
-            self.pos[0]+= 1
+        if all([self.pos[0] + block[0] < BLOCK_COUNT_W - 1 for block in self.blocks]):
+            self.pos[0] += 1
 
     def down(self):
         if self.pos[1] < BLOCK_COUNT_H - 1:
-            self.pos[1]+= 1
+            self.pos[1] += 1
 
     def soft_drop(self):
         if self.pos[1] < BLOCK_COUNT_H - 1:
-            self.pos[1]+= 1
+            self.pos[1] += 1
 
     def hard_drop(self):
         self.pos[1] = BLOCK_COUNT_H - 1
@@ -46,6 +53,7 @@ class Block:
             block_pos = self.pos + block
             pygame.draw.rect(grid.surface, (255, 0, 43), (SQUARE_WIDTH * 
 block_pos[0], SQUARE_WIDTH * block_pos[1], SQUARE_WIDTH, SQUARE_WIDTH))
+
 
 class Grid:
     def __init__(self):
