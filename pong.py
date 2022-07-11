@@ -137,13 +137,13 @@ class Game:
             keys = pygame.key.get_pressed()
         
             if keys[pygame.K_UP]:
-                self.right_paddle.move(-20)
+                self.right_paddle.move(-104)
             elif keys[pygame.K_DOWN]:
-                self.right_paddle.move(20)
+                self.right_paddle.move(104)
             if keys[pygame.K_w]:
-                self.left_paddle.move(-20)
+                self.left_paddle.move(-104)
             elif keys[pygame.K_s]:
-                self.left_paddle.move(20)
+                self.left_paddle.move(104)
 
             if self.play_round:
                 if self.ball.rect.colliderect(self.left_paddle):
@@ -167,7 +167,7 @@ class Game:
                     self.p1_score.score += 1
                     if self.p1_score.score != 5:
                         pygame.time.set_timer(self.start_round, 3000, 1)
-
+                
             self.p1_score.draw(self.screen)
             self.p2_score.draw(self.screen)
             self.left_paddle.draw(self.screen)

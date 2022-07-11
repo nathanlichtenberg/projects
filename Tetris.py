@@ -51,7 +51,10 @@ class Block:
         grid.surface.fill((0, 0, 0))
         for block in self.blocks:
             block_pos = self.pos + block
-            pygame.draw.rect(grid.surface, (255, 0, 43), (SQUARE_WIDTH * block_pos[0], SQUARE_WIDTH * block_pos[1], SQUARE_WIDTH, SQUARE_WIDTH))
+            pygame.draw.rect(
+                grid.surface, (255, 0, 43),
+                (SQUARE_WIDTH * block_pos[0], SQUARE_WIDTH * block_pos[1], SQUARE_WIDTH, SQUARE_WIDTH)
+            )
 
 
 class Grid:
