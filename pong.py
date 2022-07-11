@@ -81,7 +81,7 @@ class StartScreen:
     def draw(self, surface):
         if self.show:
             surface.blit(self.background, (0, 0))
-            # surface.blit(self.title,(350, 350))
+            # surface.blit(self.title, (350, 350))
             surface.blit(self.button, self.button_rect)
 
     def hide(self):

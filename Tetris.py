@@ -51,8 +51,7 @@ class Block:
         grid.surface.fill((0, 0, 0))
         for block in self.blocks:
             block_pos = self.pos + block
-            pygame.draw.rect(grid.surface, (255, 0, 43), (SQUARE_WIDTH * 
-block_pos[0], SQUARE_WIDTH * block_pos[1], SQUARE_WIDTH, SQUARE_WIDTH))
+            pygame.draw.rect(grid.surface, (255, 0, 43), (SQUARE_WIDTH * block_pos[0], SQUARE_WIDTH * block_pos[1], SQUARE_WIDTH, SQUARE_WIDTH))
 
 
 class Grid:
@@ -77,7 +76,7 @@ class Game:
 
         font = pygame.font.Font("LcdSolid-VPzB.ttf", 60)
         self.title = font.render("TETRIS", False, (255, 255, 255))
-        self.title_rect = self.title.get_rect(center = (W // 2, 44))
+        self.title_rect = self.title.get_rect(center=(W // 2, 44))
 
         self.grid = Grid()
         self.block = Block()
@@ -87,8 +86,8 @@ class Game:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
-                #if event.type == self.SCREEN_UPDATE:
-                    #self.block.down()
+                # if event.type == self.SCREEN_UPDATE:
+                    # self.block.down()
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_DOWN:
                         self.block.soft_drop()
@@ -110,6 +109,7 @@ class Game:
 def main():
     g = Game()
     g.run()
-    
+
+
 if __name__ == "__main__":
     main()

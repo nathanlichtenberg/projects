@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-import pygame
 # import random
+import pygame
 from pygame.math import Vector2
 
 W = 1000
@@ -32,11 +32,8 @@ while True:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             pygame.quit()
-        
+
     screen.fill((255, 255, 255))
     ball.move()
     pygame.display.update()
     clock.tick(60)
-    
-
-

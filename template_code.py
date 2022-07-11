@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
+import random
 import pygame
 from pygame.math import Vector2
-import random
 
 W = 600
 H = 600
@@ -20,6 +20,7 @@ class Fruit:
 
     def draw(self, screen):
         pygame.draw.rect(screen, (255, 0, 43), (SQUARE_WIDTH * self.pos[0], SQUARE_WIDTH * self.pos[1], SQUARE_WIDTH, SQUARE_WIDTH))
+
 
 class Game:
     def __init__(self):
@@ -43,7 +44,7 @@ class Game:
                 if event.type == pygame.KEYDOWN:
                     pass
 
-            self.screen.fill((0,0,0))
+            self.screen.fill((0, 0, 0))
             self.fruit.draw(self.screen)
             pygame.display.update()
             self.clock.tick(60)
@@ -52,6 +53,7 @@ class Game:
 def main():
     g = Game()
     g.run()
-    
+
+
 if __name__ == "__main__":
     main()
