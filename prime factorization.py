@@ -1,13 +1,12 @@
 import time
 import math
 
-
 counter = 0
 
 while counter == 0:
     number = int(input("Your Number: "))
     primefac = []
-    startTime = time.time()
+    start_time = time.time()
     if number == 1:
         print("[1]")
         continue
@@ -33,6 +32,6 @@ while counter == 0:
     print(primefac)
     counter += 1
 
-executionTime = (time.time() - startTime)
+executionTime = (time.time() - start_time)
 print('Execution time in seconds: ' + str(executionTime))
 
