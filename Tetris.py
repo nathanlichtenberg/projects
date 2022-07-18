@@ -24,8 +24,8 @@ class Block:
 
     def rotate(self):
         rotated_blocks = [block.rotate(-90) for block in self.blocks]
-        print(rotated_blocks)
-        if all([0 < block[0] < BLOCK_COUNT_W - 1 for block in rotated_blocks]):
+
+        if all([0 <= self.pos[0] + block[0] <= BLOCK_COUNT_W - 1 for block in rotated_blocks]):
             self.blocks = rotated_blocks
 
     def left(self):
@@ -37,18 +37,16 @@ class Block:
             self.pos[0] += 1
 
     def down(self):
-        if self.pos[1] < BLOCK_COUNT_H - 1:
+        if all([self.pos[1] + block[1] < BLOCK_COUNT_H - 1 for block in self.blocks]):
             self.pos[1] += 1
 
     def soft_drop(self):
-        if self.pos[1] < BLOCK_COUNT_H - 1:
-            self.pos[1] += 1
+        self.down()
 
     def hard_drop(self):
         self.pos[1] = BLOCK_COUNT_H - 1
         
     def draw(self, grid):
-        grid.surface.fill((0, 0, 0))
         for block in self.blocks:
             block_pos = self.pos + block
             pygame.draw.rect(
@@ -61,9 +59,14 @@ class Grid:
     def __init__(self):
         self.surface = pygame.Surface((GRID_W, GRID_H))
         self.surface.fill((0, 0, 0))
-
+        self.grid = [[(0, 0, 0)] * BLOCK_COUNT_W for _ in range(BLOCK_COUNT_H)]
+        
     def draw(self, screen):
         screen.blit(self.surface, (20, 80))
+        self.surface.fill((0, 0, 0))
+        for i in range(BLOCK_COUNT_H):
+            for j in range(BLOCK_COUNT_W):
+                pygame.draw.rect(self.surface, self.grid[i][j], (SQUARE_WIDTH * i, SQUARE_WIDTH * j, SQUARE_WIDTH, SQUARE_WIDTH))
 
 
 class Game:
