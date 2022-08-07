@@ -13,6 +13,3 @@ while True:
    big += 1
 
 print(lcm)
-
-
-
