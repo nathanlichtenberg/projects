@@ -1,3 +1,4 @@
+from ast import If
 import pygame
 from pygame.math import Vector2
 import random
@@ -16,10 +17,11 @@ BLOCK_COUNT_H = 20
 SQUARE_WIDTH = GRID_W//BLOCK_COUNT_W
 
 class Block:
-    def __init__(self, shape, color):
+    def __init__(self, shape, color, grid):
         self.pos = Vector2(BLOCK_COUNT_W//2, 0)
         self.blocks = shape
         self.color = color
+        self.grid = grid
         
     def rotate(self):
         rotated_blocks = [block.rotate(-90) for block in self.blocks]
@@ -38,6 +40,8 @@ class Block:
     def down(self):
         if all([self.pos[1] + block[1] < BLOCK_COUNT_H - 1 for block in self.blocks]):
             self.pos[1]+= 1
+        else:
+            self.grid.freeze_shape(self)
 
     def soft_drop(self):
         self.down()
@@ -62,9 +66,12 @@ class Grid:
         for i in range(BLOCK_COUNT_H):
             for j in range(BLOCK_COUNT_W):
                 pygame.draw.rect(self.surface, self.grid[i][j], (SQUARE_WIDTH * i, SQUARE_WIDTH * j, SQUARE_WIDTH, SQUARE_WIDTH))
-                
+    
+    def freeze_shape(self, shape):
+        blocks = [shape.pos + block for block in shape.blocks]
 
-
+        for x,y in blocks:
+            self.grid[int(y)][int(x)] = shape.color
 
 
 class Game:
@@ -93,7 +100,7 @@ class Game:
         
         self.grid = Grid()
         choice = random.randint(0,4)
-        self.block = Block(self.shapes[choice],self.colors[choice])
+        self.block = Block(self.shapes[choice],self.colors[choice],self.grid)
         
     def run(self):
         while True:
