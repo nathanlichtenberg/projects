@@ -1,10 +1,8 @@
-import random
-from random import *
-
 from ast import If
 
 import pygame
 from pygame.math import Vector2
+from random import *
 
 W = 600
 H = 700
