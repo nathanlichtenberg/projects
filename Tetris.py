@@ -1,4 +1,6 @@
 import random
+from random import *
+
 from ast import If
 
 import pygame
@@ -19,11 +21,26 @@ SQUARE_WIDTH = GRID_W // BLOCK_COUNT_W
 
 
 class Block:
-    def __init__(self, shape, color, grid):
-        self.pos = Vector2(BLOCK_COUNT_W // 2, 0)
-        self.blocks = shape
-        self.color = color
+    def __init__(self, grid):
+        self.shapes = [
+            [Vector2(0, 0), Vector2(-1, 0),Vector2(-1, -1),Vector2(-1, 1)],  #Triangle shape
+            [Vector2(0, 0), Vector2(0, 1),Vector2(0, 2),Vector2(0, -1)],     #Vertical Line
+            [Vector2(0, 0), Vector2(-1, 1),Vector2(0, 1),Vector2(0, -1)],    #left L-Shape
+            [Vector2(0, 0), Vector2(1, 1),Vector2(0, 1),Vector2(0, -1)],     #right L-Shape
+            [Vector2(0, 0), Vector2(-1, -1),Vector2(0, -1),Vector2(1, 0)],   #The "S" Shape 
+        ]
+        
+        self.colors = [(255, 12, 114), (15, 255, 115), (255, 142, 14), (245, 56, 255), (255, 225, 56)]
+
         self.grid = grid
+
+        self.respawn()
+
+    def respawn(self):
+        choice = randint(0, 4)
+        self.pos = Vector2(BLOCK_COUNT_W // 2, 0)
+        self.blocks = self.shapes[choice]
+        self.color = self.colors[choice]
 
     def rotate(self):
         rotated_blocks = [block.rotate(-90) for block in self.blocks]
@@ -40,16 +57,23 @@ class Block:
             self.pos[0] += 1
 
     def down(self):
-        if all([self.pos[1] + block[1] < BLOCK_COUNT_H - 1 for block in self.blocks]):
+        if not self.should_be_frozen():
             self.pos[1] += 1
         else:
             self.grid.freeze_shape(self)
+            self.respawn()
 
     def soft_drop(self):
         self.down()
 
     def hard_drop(self):
         self.pos[1] = BLOCK_COUNT_H - 1
+
+    def should_be_frozen(self):
+        if all([self.pos[1] + block[1] < BLOCK_COUNT_H - 1 for block in self.blocks]):
+            return False
+            #if all([self.pos[1] + block[1] + 1 for block in self.blocks]):
+        return True
         
     def draw(self, grid):
         for block in self.blocks:
@@ -69,16 +93,15 @@ class Grid:
     def draw(self, screen):
         screen.blit(self.surface, (20, 80))
         self.surface.fill((0, 0, 0))
-        for i in range(BLOCK_COUNT_H):
-            for j in range(BLOCK_COUNT_W):
-                pygame.draw.rect(self.surface, self.grid[i][j], (SQUARE_WIDTH * i, SQUARE_WIDTH * j, SQUARE_WIDTH, SQUARE_WIDTH))
+        for x in range(BLOCK_COUNT_W):
+            for y in range(BLOCK_COUNT_H):
+                pygame.draw.rect(self.surface, self.grid[y][x], (SQUARE_WIDTH * x, SQUARE_WIDTH * y, SQUARE_WIDTH, SQUARE_WIDTH))
     
     def freeze_shape(self, shape):
         blocks = [shape.pos + block for block in shape.blocks]
 
         for x,y in blocks:
             self.grid[int(y)][int(x)] = shape.color
-
 
 class Game:
     def __init__(self):
@@ -94,10 +117,9 @@ class Game:
         font = pygame.font.Font("LcdSolid-VPzB.ttf", 60)
         self.title = font.render("TETRIS", False, (255, 255, 255))
         self.title_rect = self.title.get_rect(center=(W // 2, 44))
-
+        
         self.grid = Grid()
-        choice = random.randint(0, 4)
-        self.block = Block(self.shapes[choice], self.colors[choice], self.grid)
+        self.block = Block(self.grid)
         
     def run(self):
         while True:
