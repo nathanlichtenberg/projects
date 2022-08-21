@@ -41,7 +41,10 @@ class Block:
         rotated_blocks = [block.rotate(-90) for block in self.blocks]
 
         if all([0 <= self.pos[0] + block[0] <= BLOCK_COUNT_W - 1 for block in rotated_blocks]):
+            temp = self.blocks
             self.blocks = rotated_blocks
+            if self.is_overlapping():
+                self.blocks = temp
 
     def left(self):
         if all([self.pos[0] + block[0] > 0 for block in self.blocks]):
@@ -52,9 +55,9 @@ class Block:
             self.pos[0]+= 1
 
     def down(self):
-        if not self.should_be_frozen():
-            self.pos[1]+= 1
-        else:
+        self.pos[1]+= 1
+        if self.is_overlapping():
+            self.pos[1] -= 1
             self.grid.freeze_shape(self)
             self.respawn()
 
@@ -67,8 +70,18 @@ class Block:
     def should_be_frozen(self):
         if all([self.pos[1] + block[1] < BLOCK_COUNT_H - 1 for block in self.blocks]):
             return False
-            #if all([self.pos[1] + block[1] + 1 for block in self.blocks]):
-        return True
+        if any([self.pos[1] + block[1] + 1 for block in self.blocks]):
+            return True
+        return False
+    
+    def is_overlapping(self):
+        if not all([self.pos[1] + block[1] < BLOCK_COUNT_H for block in self.blocks]):
+            return True
+        for block in self.blocks:
+            x,y = self.pos + block
+            if self.grid.grid[int(y)][int(x)] != (0,0,0):
+                return True
+        return False
         
     def draw(self, grid):
         for block in self.blocks:
@@ -103,7 +116,7 @@ class Game:
         self.clock = pygame.time.Clock()
 
         self.SCREEN_UPDATE = pygame.USEREVENT
-        pygame.time.set_timer(self.SCREEN_UPDATE, 300)
+        pygame.time.set_timer(self.SCREEN_UPDATE, 200)
 
         font = pygame.font.Font("LcdSolid-VPzB.ttf", 60)
         self.title = font.render("TETRIS", False, (255,255,255))
