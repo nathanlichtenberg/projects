@@ -1,4 +1,4 @@
-from ast import If
+# from ast import If
 
 import pygame
 from pygame.math import Vector2
@@ -21,11 +21,11 @@ SQUARE_WIDTH = GRID_W // BLOCK_COUNT_W
 class Block:
     def __init__(self, grid):
         self.shapes = [
-            [Vector2(0, 0), Vector2(-1, 0),Vector2(-1, -1),Vector2(-1, 1)],  #Triangle shape
-            [Vector2(0, 0), Vector2(0, 1),Vector2(0, 2),Vector2(0, -1)],     #Vertical Line
-            [Vector2(0, 0), Vector2(-1, 1),Vector2(0, 1),Vector2(0, -1)],    #left L-Shape
-            [Vector2(0, 0), Vector2(1, 1),Vector2(0, 1),Vector2(0, -1)],     #right L-Shape
-            [Vector2(0, 0), Vector2(-1, -1),Vector2(0, -1),Vector2(1, 0)],   #The "S" Shape 
+            [Vector2(0, 0), Vector2(-1, 0), Vector2(-1, -1), Vector2(-1, 1)],  # Triangle shape
+            [Vector2(0, 0), Vector2(0, 1), Vector2(0, 2), Vector2(0, -1)],     # Vertical Line
+            [Vector2(0, 0), Vector2(-1, 1), Vector2(0, 1), Vector2(0, -1)],    # left L-Shape
+            [Vector2(0, 0), Vector2(1, 1), Vector2(0, 1), Vector2(0, -1)],     # right L-Shape
+            [Vector2(0, 0), Vector2(-1, -1), Vector2(0, -1), Vector2(1, 0)],   # The "S" Shape 
         ]
         
         self.colors = [(255, 12, 114), (15, 255, 115), (255, 142, 14), (245, 56, 255), (255, 225, 56)]
@@ -44,34 +44,56 @@ class Block:
         rotated_blocks = [block.rotate(-90) for block in self.blocks]
 
         if all([0 <= self.pos[0] + block[0] <= BLOCK_COUNT_W - 1 for block in rotated_blocks]):
+            temp = self.blocks
             self.blocks = rotated_blocks
+            if self.is_overlapping():
+                self.blocks = temp
 
     def left(self):
         if all([self.pos[0] + block[0] > 0 for block in self.blocks]):
             self.pos[0] -= 1
+            if self.is_overlapping():
+                self.pos[0] += 1
 
     def right(self):
         if all([self.pos[0] + block[0] < BLOCK_COUNT_W - 1 for block in self.blocks]):
             self.pos[0] += 1
+            if self.is_overlapping():
+                self.pos[0] -= 1
 
+    # returns true if block respawns otherwise returns false
     def down(self):
-        if not self.should_be_frozen():
-            self.pos[1] += 1
-        else:
+        self.pos[1] += 1
+        if self.is_overlapping():
+            self.pos[1] -= 1
             self.grid.freeze_shape(self)
             self.respawn()
+            return True
+        return False
 
     def soft_drop(self):
         self.down()
 
     def hard_drop(self):
-        self.pos[1] = BLOCK_COUNT_H - 1
+        while True:
+            if self.down():
+                break
 
     def should_be_frozen(self):
         if all([self.pos[1] + block[1] < BLOCK_COUNT_H - 1 for block in self.blocks]):
             return False
-            #if all([self.pos[1] + block[1] + 1 for block in self.blocks]):
-        return True
+        if any([self.pos[1] + block[1] + 1 for block in self.blocks]):
+            return True
+        return False
+    
+    def is_overlapping(self):
+        if not all([self.pos[1] + block[1] < BLOCK_COUNT_H for block in self.blocks]):
+            return True
+        for block in self.blocks:
+            x, y = self.pos + block
+            if self.grid.grid[int(y)][int(x)] != (0, 0, 0):
+                return True
+        return False
         
     def draw(self, grid):
         for block in self.blocks:
@@ -98,8 +120,11 @@ class Grid:
     def freeze_shape(self, shape):
         blocks = [shape.pos + block for block in shape.blocks]
 
-        for x,y in blocks:
+        for x, y in blocks:
+            if y < 0:
+                exit()
             self.grid[int(y)][int(x)] = shape.color
+
 
 class Game:
     def __init__(self):
@@ -110,7 +135,7 @@ class Game:
         self.clock = pygame.time.Clock()
 
         self.SCREEN_UPDATE = pygame.USEREVENT
-        pygame.time.set_timer(self.SCREEN_UPDATE, 300)
+        pygame.time.set_timer(self.SCREEN_UPDATE, 200)
 
         font = pygame.font.Font("LcdSolid-VPzB.ttf", 60)
         self.title = font.render("TETRIS", False, (255, 255, 255))
