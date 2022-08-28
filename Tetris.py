@@ -49,23 +49,34 @@ class Block:
     def left(self):
         if all([self.pos[0] + block[0] > 0 for block in self.blocks]):
             self.pos[0]-= 1
+            if self.is_overlapping():
+                self.pos[0]+= 1
 
     def right(self):
         if all([self.pos[0] + block[0] < BLOCK_COUNT_W - 1 for block in self.blocks]):
             self.pos[0]+= 1
+            if self.is_overlapping():
+                self.pos[0]-= 1
 
+    # returns true if block respawns otherwise returns false
     def down(self):
         self.pos[1]+= 1
         if self.is_overlapping():
             self.pos[1] -= 1
             self.grid.freeze_shape(self)
             self.respawn()
+            return True
+        return False
 
     def soft_drop(self):
         self.down()
 
     def hard_drop(self):
-        self.pos[1] = BLOCK_COUNT_H - 1
+        while True:
+            if self.down():
+                break
+
+            
 
     def should_be_frozen(self):
         if all([self.pos[1] + block[1] < BLOCK_COUNT_H - 1 for block in self.blocks]):
@@ -105,6 +116,8 @@ class Grid:
         blocks = [shape.pos + block for block in shape.blocks]
 
         for x,y in blocks:
+            if y < 0:
+                exit()
             self.grid[int(y)][int(x)] = shape.color
 
 class Game:
