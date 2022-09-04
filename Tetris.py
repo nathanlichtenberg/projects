@@ -70,11 +70,13 @@ class Block:
 
     def soft_drop(self):
         self.down()
+        self.grid.score.score += 2
 
     def hard_drop(self):
         while True:
             if self.down():
                 break
+        self.grid.score.score += 20
 
             
 
@@ -122,6 +124,7 @@ class Grid:
             self.grid[int(y)][int(x)] = shape.color
 
         self.clear_rows()
+        self.score.score += 20
 
     def clear_rows(self):
         for i in range(len(self.grid)):
