@@ -100,25 +100,51 @@ class Block:
             pygame.draw.rect(grid.surface, self.color, (SQUARE_WIDTH * block_pos[0], SQUARE_WIDTH * block_pos[1], SQUARE_WIDTH, SQUARE_WIDTH))
 
 class Grid:
-    def __init__(self):
+    def __init__(self, score):
         self.surface = pygame.Surface((GRID_W,GRID_H))
         self.surface.fill((0,0,0))
         self.grid = [[(0,0,0)] * BLOCK_COUNT_W for _ in range(BLOCK_COUNT_H)]
-        
+        self.score = score
+
     def draw(self, screen):
         screen.blit(self.surface,(20,80))
         self.surface.fill((0,0,0))
         for x in range(BLOCK_COUNT_W):
             for y in range(BLOCK_COUNT_H):
-                pygame.draw.rect(self.surface, self.grid[y][x], (SQUARE_WIDTH * x, SQUARE_WIDTH * y, SQUARE_WIDTH, SQUARE_WIDTH))
+                pygame.draw.rect(self. surface, self.grid[y][x], (SQUARE_WIDTH * x, SQUARE_WIDTH * y, SQUARE_WIDTH, SQUARE_WIDTH))
     
-    def freeze_shape(self, shape):
+    def freeze_shape(self, shape):  
         blocks = [shape.pos + block for block in shape.blocks]
 
         for x,y in blocks:
             if y < 0:
                 exit()
             self.grid[int(y)][int(x)] = shape.color
+
+        self.clear_rows()
+
+    def clear_rows(self):
+        for i in range(len(self.grid)):
+            if not any([x == (0,0,0) for x in self.grid[i]]):
+                self.grid.pop(i)
+                self.grid.insert(0, [(0,0,0)] * BLOCK_COUNT_W)
+                self.score.increase(100)
+
+class Score:
+
+    def __init__(self, font, pos):
+        self.font = font
+        self.pos = pos
+        self.score = 0
+
+    def draw(self, surface):
+        score_text = self.font.render(str(self.score), True, (255,255,255))
+        score_rect = score_text.get_rect(center = self.pos)
+        surface.blit(score_text,score_rect)
+
+    def increase(self, amount):
+        self.score += amount
+
 
 class Game:
     def __init__(self):
@@ -131,12 +157,16 @@ class Game:
         self.SCREEN_UPDATE = pygame.USEREVENT
         pygame.time.set_timer(self.SCREEN_UPDATE, 200)
 
-        font = pygame.font.Font("LcdSolid-VPzB.ttf", 60)
-        self.title = font.render("TETRIS", False, (255,255,255))
+        title_font = pygame.font.Font("LcdSolid-VPzB.ttf", 60)
+        self.title = title_font.render("TETRIS", False, (255,255,255))
         self.title_rect = self.title.get_rect(center = (W//2, 44))
         
-        self.grid = Grid()
+        score_font = pygame.font.Font("score_font.ttf", 60)
+        self.score = Score(score_font, (460,400))
+
+        self.grid = Grid(self.score)
         self.block = Block(self.grid)
+
         
     def run(self):
         while True:
@@ -160,6 +190,7 @@ class Game:
             self.screen.fill((160,160,160))
             self.screen.blit(self.title, self.title_rect)
             self.grid.draw(self.screen)
+            self.score.draw(self.screen)
             self.block.draw(self.grid)
             pygame.display.update()
             self.clock.tick(60)
