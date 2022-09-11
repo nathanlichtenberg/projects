@@ -143,6 +143,10 @@ class Score:
     def draw(self, surface):
         score_text = self.font.render(str(self.score), True, (255,255,255))
         score_rect = score_text.get_rect(center = self.pos)
+        background_rect = score_rect.copy()
+        background_rect.width += 40
+        background_rect.center = self.pos
+        pygame.draw.rect(surface,(0,0,0),background_rect)
         surface.blit(score_text,score_rect)
 
     def increase(self, amount):
