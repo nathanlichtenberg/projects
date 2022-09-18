@@ -1,4 +1,3 @@
-from ast import If
 import pygame
 from pygame.math import Vector2
 from random import *
@@ -11,7 +10,7 @@ GRID_H = 600
 #Number of blocks on bottom edge
 BLOCK_COUNT_W = 10
 BLOCK_COUNT_H = 20
-
+ 
 #Width of a single square in pixels
 SQUARE_WIDTH = GRID_W//BLOCK_COUNT_W
 
@@ -23,21 +22,26 @@ class Block:
             [Vector2(0,0), Vector2(-1,1),Vector2(0,1),Vector2(0,-1)],    #left L-Shape
             [Vector2(0,0), Vector2(1,1),Vector2(0,1),Vector2(0,-1)],     #right L-Shape
             [Vector2(0,0), Vector2(-1,-1),Vector2(0,-1),Vector2(1,0)],   #The "S" Shape 
+            [Vector2(0,0), Vector2(0,-1),Vector2(1,-1),Vector2(1,0)],    #The Square Shape
         ]
         
-        self.colors = [(255,12,114),(15,255,115),(255,142,14),(245,56,255),(255,225,56)]
+        self.colors = [(255,12,114),(15,255,115),(255,142,14),(245,56,255),(255,225,56),(16,194,255)]
 
         self.grid = grid
 
         self.respawn()
 
     def respawn(self):
-        choice = randint(0,4)
+        choice = randint(0,5)
         self.pos = Vector2(BLOCK_COUNT_W//2, 0)
         self.blocks = self.shapes[choice]
         self.color = self.colors[choice]
         
     def rotate(self):
+        #Don't rotate square shape
+        if self.blocks == [Vector2(0,0), Vector2(0,-1),Vector2(1,-1),Vector2(1,0)]:
+            return
+
         rotated_blocks = [block.rotate(-90) for block in self.blocks]
 
         if all([0 <= self.pos[0] + block[0] <= BLOCK_COUNT_W - 1 for block in rotated_blocks]):
@@ -76,10 +80,9 @@ class Block:
         while True:
             if self.down():
                 break
-        self.grid.score.score += 20
+        self.grid.score.score += 10
 
-            
-
+    
     def should_be_frozen(self):
         if all([self.pos[1] + block[1] < BLOCK_COUNT_H - 1 for block in self.blocks]):
             return False
