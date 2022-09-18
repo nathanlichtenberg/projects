@@ -153,7 +153,7 @@ class Score:
         surface.blit(score_text,score_rect)
 
     def increase(self, amount):
-        self.score += amount
+        self.score += amountc
 
 
 class Game:
@@ -184,18 +184,31 @@ class Game:
                 if event.type == pygame.QUIT:
                     pygame.quit()
                 if event.type == self.SCREEN_UPDATE:
-                    self.block.down()
-                if event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_UP:
-                        self.block.rotate()
-                    if event.key == pygame.K_DOWN:
-                        self.block.soft_drop()
-                    if event.key == pygame.K_LEFT:
-                        self.block.left()
-                    if event.key == pygame.K_RIGHT:
-                        self.block.right()
-                    if event.key == pygame.K_SPACE:
-                        self.block.hard_drop()
+                    #self.block.down()
+                    pass
+
+                keys = pygame.key.get_pressed()
+
+                if keys[pygame.K_UP]:
+                    self.block.rotate()
+                elif keys[pygame.K_DOWN]:
+                    print("foot")
+                    self.block.soft_drop()
+                if keys[pygame.K_LEFT]:
+                    self.block.left()
+                elif keys[pygame.K_RIGHT]:
+                    self.block.right()
+                #if event.type == pygame.KEYDOWN:
+                    #if event.key == pygame.K_UP:
+                        #self.block.rotate()
+                    #if event.key == pygame.K_DOWN:
+                    #     self.block.soft_drop()
+                    # if event.key == pygame.K_LEFT:
+                    #     self.block.left()
+                    # if event.key == pygame.K_RIGHT:
+                    #     self.block.right()
+                    # if event.key == pygame.K_SPACE:
+                    #     self.block.hard_drop()
 
             self.screen.fill((160,160,160))
             self.screen.blit(self.title, self.title_rect)
