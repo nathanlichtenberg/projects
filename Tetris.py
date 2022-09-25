@@ -155,6 +155,14 @@ class Score:
     def increase(self, amount):
         self.score += amount
 
+class Decoration:
+    def __init__(self, image, pos):
+        self.image = image
+        self.pos = pos
+
+    def draw(self, surface):
+        surface.blit(self.image, self.pos)
+    
 
 class Game:
     def __init__(self):
@@ -168,7 +176,7 @@ class Game:
         self.BLOCK_MOVE = pygame.USEREVENT
 
         pygame.time.set_timer(self.BLOCK_FALL, 400)
-        pygame.time.set_timer(self.BLOCK_MOVE, 200)
+        pygame.time.set_timer(self.BLOCK_MOVE, 150)
 
         title_font = pygame.font.Font("LcdSolid-VPzB.ttf", 60)
         self.title = title_font.render("TETRIS", False, (255,255,255))
@@ -180,7 +188,10 @@ class Game:
         self.grid = Grid(self.score)
         self.block = Block(self.grid)
 
-        
+        background = pygame.image.load("Tetris_Background.png").convert_alpha()
+        background = pygame.transform.scale(background,(190,140))
+        self.decoration = Decoration(background,(418,560))
+
     def run(self):
         while True:
             for event in pygame.event.get():
@@ -201,23 +212,24 @@ class Game:
                         self.block.right()
             
             
-                #if event.type == pygame.KEYDOWN:
-                    #if event.key == pygame.K_UP:
-                        #self.block.rotate()
-                    #if event.key == pygame.K_DOWN:
-                    #     self.block.soft_drop()
-                    # if event.key == pygame.K_LEFT:
-                    #     self.block.left()
-                    # if event.key == pygame.K_RIGHT:
-                    #     self.block.right()
-                    # if event.key == pygame.K_SPACE:
-                    #     self.block.hard_drop()
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_UP:
+                        self.block.rotate()
+                    if event.key == pygame.K_DOWN:
+                        self.block.soft_drop()
+                    if event.key == pygame.K_LEFT:
+                        self.block.left()
+                    if event.key == pygame.K_RIGHT:
+                        self.block.right()
+                    if event.key == pygame.K_SPACE:
+                        self.block.hard_drop()
 
             self.screen.fill((160,160,160))
             self.screen.blit(self.title, self.title_rect)
             self.grid.draw(self.screen)
             self.score.draw(self.screen)
             self.block.draw(self.grid)
+            self.decoration.draw(self.screen)
             pygame.display.update()
             self.clock.tick(60)
 
