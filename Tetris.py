@@ -153,7 +153,7 @@ class Score:
         surface.blit(score_text,score_rect)
 
     def increase(self, amount):
-        self.score += amountc
+        self.score += amount
 
 
 class Game:
@@ -164,8 +164,11 @@ class Game:
         self.screen = pygame.display.set_mode((W,H))
         self.clock = pygame.time.Clock()
 
-        self.SCREEN_UPDATE = pygame.USEREVENT
-        pygame.time.set_timer(self.SCREEN_UPDATE, 200)
+        self.BLOCK_FALL = pygame.USEREVENT
+        self.BLOCK_MOVE = pygame.USEREVENT
+
+        pygame.time.set_timer(self.BLOCK_FALL, 400)
+        pygame.time.set_timer(self.BLOCK_MOVE, 200)
 
         title_font = pygame.font.Font("LcdSolid-VPzB.ttf", 60)
         self.title = title_font.render("TETRIS", False, (255,255,255))
@@ -183,21 +186,21 @@ class Game:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
-                if event.type == self.SCREEN_UPDATE:
-                    #self.block.down()
-                    pass
+                if event.type == self.BLOCK_FALL:
+                    self.block.down()
+                if event.type == self.BLOCK_MOVE:
+                    keys = pygame.key.get_pressed()
 
-                keys = pygame.key.get_pressed()
-
-                if keys[pygame.K_UP]:
-                    self.block.rotate()
-                elif keys[pygame.K_DOWN]:
-                    print("foot")
-                    self.block.soft_drop()
-                if keys[pygame.K_LEFT]:
-                    self.block.left()
-                elif keys[pygame.K_RIGHT]:
-                    self.block.right()
+                    if keys[pygame.K_UP]:
+                        self.block.rotate()
+                    elif keys[pygame.K_DOWN]:
+                        self.block.soft_drop()
+                    if keys[pygame.K_LEFT]:
+                        self.block.left()
+                    elif keys[pygame.K_RIGHT]:
+                        self.block.right()
+            
+            
                 #if event.type == pygame.KEYDOWN:
                     #if event.key == pygame.K_UP:
                         #self.block.rotate()
