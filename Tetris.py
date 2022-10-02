@@ -99,10 +99,10 @@ class Block:
                 return True
         return False
         
-    def draw(self, grid):
+    def draw(self, surface):
         for block in self.blocks:
             block_pos = self.pos + block
-            pygame.draw.rect(grid.surface, self.color, (SQUARE_WIDTH * block_pos[0], SQUARE_WIDTH * block_pos[1], SQUARE_WIDTH, SQUARE_WIDTH))
+            pygame.draw.rect(surface, self.color, (SQUARE_WIDTH * block_pos[0], SQUARE_WIDTH * block_pos[1], SQUARE_WIDTH, SQUARE_WIDTH))
 
 class Grid:
     def __init__(self, score):
@@ -162,7 +162,22 @@ class Decoration:
 
     def draw(self, surface):
         surface.blit(self.image, self.pos)
-    
+
+class NextShape:
+    def __init__(self, pos, font):
+        self.pos = pos
+        self.font = font
+        self.surface = pygame.Surface((200,220))
+        self.surface.fill((0,0,0))
+        self.block = Block(None)
+        self.block.pos = Vector2((3,4))
+
+    def draw(self, screen):
+        screen.blit(self.surface,(self.pos[0],self.pos[1]))
+        title = self.font.render("Next Block", True, (255,255,255))
+        title_rect = title.get_rect(center = (100,20))
+        self.surface.blit(title,title_rect)
+        self.block.draw(self.surface)
 
 class Game:
     def __init__(self):
@@ -191,6 +206,9 @@ class Game:
         background = pygame.image.load("Tetris_Background.png").convert_alpha()
         background = pygame.transform.scale(background,(190,140))
         self.decoration = Decoration(background,(418,560))
+
+        shape_font = pygame.font.Font("DrymePersonalUseBold-2OYRecopy.ttf", 30)
+        self.next_shape = NextShape((360,80),shape_font)
 
     def run(self):
         while True:
@@ -228,8 +246,9 @@ class Game:
             self.screen.blit(self.title, self.title_rect)
             self.grid.draw(self.screen)
             self.score.draw(self.screen)
-            self.block.draw(self.grid)
+            self.block.draw(self.grid.surface)
             self.decoration.draw(self.screen)
+            self.next_shape.draw(self.screen)
             pygame.display.update()
             self.clock.tick(60)
 
