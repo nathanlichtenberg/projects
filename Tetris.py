@@ -15,7 +15,7 @@ BLOCK_COUNT_H = 20
 SQUARE_WIDTH = GRID_W//BLOCK_COUNT_W
 
 class Block:
-    def __init__(self, grid):
+    def __init__(self, grid, game, is_playable = True):
         self.shapes = [
             [Vector2(0,0), Vector2(-1,0),Vector2(-1,-1),Vector2(-1,1)],  #Triangle shape
             [Vector2(0,0), Vector2(0,1),Vector2(0,2),Vector2(0,-1)],     #Vertical Line
@@ -29,13 +29,20 @@ class Block:
 
         self.grid = grid
 
+        self.game = game
+
+        self.is_playable = is_playable
+
         self.respawn()
 
     def respawn(self):
-        choice = randint(0,5)
-        self.pos = Vector2(BLOCK_COUNT_W//2, 0)
-        self.blocks = self.shapes[choice]
-        self.color = self.colors[choice]
+        if self.is_playable:        
+            self.game.choice = randint(0,5)
+            self.game.next_shape.update()
+            self.pos = Vector2(BLOCK_COUNT_W//2, 0)
+        self.blocks = self.shapes[self.game.choice]
+        self.color = self.colors[self.game.choice]
+        
         
     def rotate(self):
         #Don't rotate square shape
@@ -164,20 +171,23 @@ class Decoration:
         surface.blit(self.image, self.pos)
 
 class NextShape:
-    def __init__(self, pos, font):
+    def __init__(self, pos, font, game):
         self.pos = pos
         self.font = font
         self.surface = pygame.Surface((200,220))
-        self.surface.fill((0,0,0))
-        self.block = Block(None)
+        self.block = Block(None,game,False)
         self.block.pos = Vector2((3,4))
 
+    def update(self):
+        self.block.respawn()
+
     def draw(self, screen):
-        screen.blit(self.surface,(self.pos[0],self.pos[1]))
+        self.surface.fill((0,0,0))
         title = self.font.render("Next Block", True, (255,255,255))
         title_rect = title.get_rect(center = (100,20))
         self.surface.blit(title,title_rect)
         self.block.draw(self.surface)
+        screen.blit(self.surface,(self.pos[0],self.pos[1]))
 
 class Game:
     def __init__(self):
@@ -201,14 +211,17 @@ class Game:
         self.score = Score(score_font, (460,400))
 
         self.grid = Grid(self.score)
-        self.block = Block(self.grid)
+
+        self.choice = randint(0,5)
+
+        shape_font = pygame.font.Font("DrymePersonalUseBold-2OYRecopy.ttf", 30)
+        self.next_shape = NextShape((360,80),shape_font,self)
+
+        self.block = Block(self.grid,self)
 
         background = pygame.image.load("Tetris_Background.png").convert_alpha()
         background = pygame.transform.scale(background,(190,140))
         self.decoration = Decoration(background,(418,560))
-
-        shape_font = pygame.font.Font("DrymePersonalUseBold-2OYRecopy.ttf", 30)
-        self.next_shape = NextShape((360,80),shape_font)
 
     def run(self):
         while True:
@@ -220,11 +233,9 @@ class Game:
                 if event.type == self.BLOCK_MOVE:
                     keys = pygame.key.get_pressed()
 
-                    if keys[pygame.K_UP]:
-                        self.block.rotate()
-                    elif keys[pygame.K_DOWN]:
+                    if keys[pygame.K_DOWN]:
                         self.block.soft_drop()
-                    if keys[pygame.K_LEFT]:
+                    elif keys[pygame.K_LEFT]:
                         self.block.left()
                     elif keys[pygame.K_RIGHT]:
                         self.block.right()
