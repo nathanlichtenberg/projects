@@ -33,16 +33,23 @@ class Block:
 
         self.is_playable = is_playable
 
-        self.respawn()
+        if self.is_playable:
+            self.respawn()
 
     def respawn(self):
-        if self.is_playable:        
-            self.game.choice = randint(0,5)
-            self.game.next_shape.update()
-            self.pos = Vector2(BLOCK_COUNT_W//2, 0)
-        self.blocks = self.shapes[self.game.choice]
-        self.color = self.colors[self.game.choice]
-        
+        self.game.choice = self.game.next_choice
+        self.game.next_choice = randint(0,5)
+        self.game.next_shape.block.update()
+        self.pos = Vector2(BLOCK_COUNT_W//2, 0)
+        self.update()
+            
+    def update(self):
+        if self.is_playable:
+            self.blocks = self.shapes[self.game.choice]
+            self.color = self.colors[self.game.choice]
+        else:
+            self.blocks = self.shapes[self.game.next_choice]
+            self.color = self.colors[self.game.next_choice]
         
     def rotate(self):
         #Don't rotate square shape
@@ -178,9 +185,6 @@ class NextShape:
         self.block = Block(None,game,False)
         self.block.pos = Vector2((3,4))
 
-    def update(self):
-        self.block.respawn()
-
     def draw(self, screen):
         self.surface.fill((0,0,0))
         title = self.font.render("Next Block", True, (255,255,255))
@@ -213,6 +217,7 @@ class Game:
         self.grid = Grid(self.score)
 
         self.choice = randint(0,5)
+        self.next_choice = randint(0,5)
 
         shape_font = pygame.font.Font("DrymePersonalUseBold-2OYRecopy.ttf", 30)
         self.next_shape = NextShape((360,80),shape_font,self)
@@ -232,13 +237,8 @@ class Game:
                     self.block.down()
                 if event.type == self.BLOCK_MOVE:
                     keys = pygame.key.get_pressed()
-
                     if keys[pygame.K_DOWN]:
                         self.block.soft_drop()
-                    elif keys[pygame.K_LEFT]:
-                        self.block.left()
-                    elif keys[pygame.K_RIGHT]:
-                        self.block.right()
             
             
                 if event.type == pygame.KEYDOWN:
